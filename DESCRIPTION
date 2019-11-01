@@ -1,0 +1,20 @@
+Package: synapseforms
+Title: Creates Reports From Synapse Submission Forms
+Version: 0.0.0.9000
+Authors@R: 
+    c(person(given = "Nicole",
+           family = "Kauer",
+           role = c("aut", "cre"),
+           email = "nicole.kauer@sagebase.org"),
+      person(given = "Sage Bionetworks",
+             role = "cph"))
+Description: The synapseforms packages gathers submission metadata
+  from Synapse, downloads the submission forms, and creates a report.
+Imports:
+  curl,
+  glue,
+  jsonlite,
+  synapser
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
