@@ -18,6 +18,10 @@ Imports:
   purrr,
   synapser,
   tibble
+Suggests:
+  devtools,
+  lintr,
+  styler
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
