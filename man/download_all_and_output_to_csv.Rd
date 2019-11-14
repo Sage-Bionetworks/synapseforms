@@ -5,7 +5,9 @@
 \title{Download all submissions, process into a single table, and output
 the table to a csv file.}
 \usage{
-download_all_and_output_to_csv(state_filter, group, output_dir)
+
+  download_all_and_output_to_csv(state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
+  group, output_dir)
 }
 \arguments{
 \item{state_filter}{The filter that is desired to gather submissions by.}

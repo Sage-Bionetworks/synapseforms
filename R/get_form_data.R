@@ -15,7 +15,7 @@ get_ps_url <- function(file_handle_id, form_data_id) {
 #' Download the submission file.
 #'
 #' @param ps_url The presigned URL for the submission.
-#' @param name The name of the submission file.
+#' @param name The name, with extension, of the submission file.
 #' @param output_dir The directory to download the submission to.
 download_form_file <- function(ps_url, name, output_dir) {
   curl::curl_download(ps_url, destfile = glue::glue("{output_dir}{name}"))

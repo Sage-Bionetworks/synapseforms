@@ -9,7 +9,7 @@ download_form_file(ps_url, name, output_dir)
 \arguments{
 \item{ps_url}{The presigned URL for the submission.}
 
-\item{name}{The name of the submission file.}
+\item{name}{The name, with extension, of the submission file.}
 
 \item{output_dir}{The directory to download the submission to.}
 }

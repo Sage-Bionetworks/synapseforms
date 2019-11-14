@@ -4,7 +4,8 @@
 \alias{download_all_submissions}
 \title{Download all submission files to folder.}
 \usage{
-download_all_submissions(state_filter, group, output_dir)
+download_all_submissions(state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
+  group, output_dir)
 }
 \arguments{
 \item{state_filter}{The filter that is desired to gather submissions by.}
