@@ -1,3 +1,5 @@
+#' Get all submission metadata
+#'
 #' Get the metadata for all submissions.
 #'
 #' @param state_filter The filter that is desired to gather submissions by.

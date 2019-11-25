@@ -2,17 +2,23 @@
 % Please edit documentation in R/get_form_data.R
 \name{download_form_file}
 \alias{download_form_file}
-\title{Download the submission file.}
+\title{Download the submission file}
 \usage{
-download_form_file(ps_url, name, output_dir)
+download_form_file(ps_url, name, output_dir = NULL)
 }
 \arguments{
 \item{ps_url}{The presigned URL for the submission.}
 
-\item{name}{The name, with extension, of the submission file.}
+\item{name}{The name, with extension, of the submission file.
+If the `output_dir` is not specified, then `name` should be
+full path.}
 
-\item{output_dir}{The directory to download the submission to.}
+\item{output_dir}{The directory to download the submission to.
+If `NULL`, will assume full path included in `name`; else will
+prepend `output_dir` to `name`.}
 }
 \description{
-Download the submission file.
+Downloads the submission file locally. Can specify
+the directory to download to, or else the `name` parameter
+will assume the path is included.
 }

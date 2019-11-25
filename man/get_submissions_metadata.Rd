@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_submission_metadata.R
 \name{get_submissions_metadata}
 \alias{get_submissions_metadata}
-\title{Get the metadata for all submissions.}
+\title{Get all submission metadata}
 \usage{
 get_submissions_metadata(state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
   group)

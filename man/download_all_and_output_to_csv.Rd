@@ -2,8 +2,7 @@
 % Please edit documentation in R/main.R
 \name{download_all_and_output_to_csv}
 \alias{download_all_and_output_to_csv}
-\title{Download all submissions, process into a single table, and output
-the table to a csv file.}
+\title{Get submissions and save to file}
 \usage{
 
   download_all_and_output_to_csv(state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
@@ -18,5 +17,6 @@ the table to a csv file.}
 }
 \description{
 Download all submissions, process into a single table, and output
-the table to a csv file.
+the table to a csv file. This will also output all forms to the
+same output directory.
 }
