@@ -2,18 +2,29 @@
 % Please edit documentation in R/convert_json_to_table.R
 \name{convert_all_forms_to_table}
 \alias{convert_all_forms_to_table}
-\title{Convert all json files in a directory to a single table.}
+\title{Convert all json file data to single table}
 \usage{
-convert_all_forms_to_table(output_dir)
+convert_all_forms_to_table(file_list = NULL, directory = NULL)
 }
 \arguments{
-\item{output_dir}{The directory with the JSON files.}
+\item{file_list}{A named or unnamed list of files. If `NULL`, will
+gather list of files from `output_dir`. If named, the names will
+be the column names for the submissions; otherwise the names
+will be generic rubbish.}
+
+\item{directory}{The directory with the JSON files. If `NULL`,
+then `file_list` is used.}
 }
 \value{
 A table with the column 'variables' that corresponds
   to all variable names across all JSON files, and each file's
-  values are listed in a column of the table under the filename.
+  values are listed in a column of the table. The column names
+  are either a generic name or the name assigned to the file in
+  file_list. Will return `NULL` if both `file_list` and `directory`
+  are `NULL`,
 }
 \description{
-Convert all json files in a directory to a single table.
+Reads all the files given (or in `directory`) and gathers
+the data into a single table by variable, where the variable
+is the unlisted json form variable.
 }

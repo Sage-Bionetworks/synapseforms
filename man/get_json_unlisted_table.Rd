@@ -2,14 +2,15 @@
 % Please edit documentation in R/convert_json_to_table.R
 \name{get_json_unlisted_table}
 \alias{get_json_unlisted_table}
-\title{Open a JSON file and return as a tibble.}
+\title{Get data from JSON file}
 \usage{
-get_json_unlisted_table(output_dir, filename)
+get_json_unlisted_table(filepath, name = NULL)
 }
 \arguments{
-\item{output_dir}{The directory the JSON file is in.}
+\item{filepath}{The path to the file, including name and extension.}
 
-\item{filename}{The name of the file.}
+\item{name}{The desired column name for the submission data.
+If `NULL`, the column will have a generic name.}
 }
 \value{
 A tibble with the columns: variables, filename, where
@@ -17,5 +18,7 @@ A tibble with the columns: variables, filename, where
   and the values for each variable are in the column filename.
 }
 \description{
-Open a JSON file and return as a tibble.
+Open a JSON file and return as a tibble with two columns,
+the variables and the data. The data column name is `name` or
+a generic name if not provided.
 }

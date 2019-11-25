@@ -1,20 +1,49 @@
-#' Convert all json files in a directory to a single table.
+#' Convert all json file data to single table
 #'
-#' @param output_dir The directory with the JSON files.
+#' Reads all the files given (or in `directory`) and gathers
+#' the data into a single table by variable, where the variable
+#' is the unlisted json form variable.
+#'
+#' @param file_list A named or unnamed list of files. If `NULL`, will
+#'   gather list of files from `output_dir`. If named, the names will
+#'   be the column names for the submissions; otherwise the names
+#'   will be generic rubbish.
+#' @param directory The directory with the JSON files. If `NULL`,
+#'   then `file_list` is used.
 #' @return A table with the column 'variables' that corresponds
 #'   to all variable names across all JSON files, and each file's
-#'   values are listed in a column of the table under the filename.
-convert_all_forms_to_table <- function(output_dir) {
-  all_file_names <- list.files(output_dir, pattern = ".json")
+#'   values are listed in a column of the table. The column names
+#'   are either a generic name or the name assigned to the file in
+#'   file_list. Will return `NULL` if both `file_list` and `directory`
+#'   are `NULL`,
+convert_all_forms_to_table <- function(file_list = NULL, directory = NULL) {
+  if (is.null(file_list) && !is.null(directory)) {
+    all_files <- list.files(directory, pattern = ".json")
+    file_list <- purrr::map(all_files, function(x) {
+      glue::glue("{output_dir}{x}")
+    })
+  } else if (is.null(file_list) && is.null(directory)) {
+    return(NULL)
+  }
 
   sub_data <- NULL
-  sub_tables <- purrr::map(
-    all_file_names,
-    function(file) {
-      get_json_unlisted_table(output_dir, file)
-    }
-  )
-  if (length(sub) > 0) {
+  if (is.null(names(file_list))) {
+    sub_tables <- purrr::map(
+      file_list,
+      function(file) {
+        get_json_unlisted_table(file)
+      }
+    )
+  } else {
+    sub_tables <- purrr::map2(
+      file_list,
+      names(file_list),
+      function(file, name) {
+        get_json_unlisted_table(file, name)
+      }
+    )
+  }
+  if (length(sub_tables) > 0) {
     if (length(sub_tables) == 1) {
       sub_data <- sub_tables[[1]]
     } else {
@@ -31,16 +60,23 @@ convert_all_forms_to_table <- function(output_dir) {
   sub_data
 }
 
-#' Open a JSON file and return as a tibble.
+#' Get data from JSON file
 #'
-#' @param output_dir The directory the JSON file is in.
-#' @param filename The name of the file.
+#' Open a JSON file and return as a tibble with two columns,
+#' the variables and the data. The data column name is `name` or
+#' a generic name if not provided.
+#'
+#' @param filepath The path to the file, including name and extension.
+#' @param name The desired column name for the submission data.
+#'   If `NULL`, the column will have a generic name.
 #' @return A tibble with the columns: variables, filename, where
 #'   the variables are concatenated names from the JSON form,
 #'   and the values for each variable are in the column filename.
-get_json_unlisted_table <- function(output_dir, filename) {
-  sub <- jsonlite::fromJSON(glue::glue("{output_dir}{filename}"))
+get_json_unlisted_table <- function(filepath, name = NULL) {
+  sub <- jsonlite::fromJSON(filepath)
   sub_table <- as.data.frame(unlist(sub), stringsAsFactors = FALSE)
-  colnames(sub_table) <- filename
+  if (!is.null(name)) {
+    names(sub_table) <- name
+  }
   sub_table <- tibble::rownames_to_column(sub_table, var = "variables")
 }
