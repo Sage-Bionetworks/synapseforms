@@ -2,3 +2,5 @@
 
 export(download_all_and_get_table)
 export(download_all_and_output_to_csv)
+export(get_main_sections)
+export(get_submission_names)
