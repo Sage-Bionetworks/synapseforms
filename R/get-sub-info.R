@@ -9,7 +9,12 @@
 #' @param submission_name Name of the submission.
 #' @return A vector of the high level sections from
 #'   the form for which the submission is not all NA.
+#'   If `submission_name` is not in `names(data)`, then
+#'   returns `NULL`.
 get_main_sections <- function(data, submission_name) {
+  if (!submission_name %in% names(data)) {
+    return(NULL)
+  }
   spread_table <- main_section_column(data)
   sections <- unique(spread_table$main_section)
   section_indices <- purrr::map(
