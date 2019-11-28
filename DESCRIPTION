@@ -17,7 +17,8 @@ Imports:
   jsonlite,
   purrr,
   synapser,
-  tibble
+  tibble,
+  tidyr
 Suggests:
   devtools,
   lintr,
