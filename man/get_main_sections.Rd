@@ -15,6 +15,8 @@ get_main_sections(data, submission_name)
 \value{
 A vector of the high level sections from
   the form for which the submission is not all NA.
+  If `submission_name` is not in `names(data)`, then
+  returns `NULL`.
 }
 \description{
 Get the high level sections from the form for a given

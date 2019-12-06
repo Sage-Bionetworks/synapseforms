@@ -4,11 +4,16 @@
 \alias{download_all_and_output_to_csv}
 \title{Get submissions and save to file}
 \usage{
-
-  download_all_and_output_to_csv(state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
-  group, output_dir)
+download_all_and_output_to_csv(
+  syn,
+  state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
+  group,
+  output_dir
+)
 }
 \arguments{
+\item{syn}{Synapse login object}
+
 \item{state_filter}{The filter that is desired to gather submissions by.}
 
 \item{group}{The groupID.}

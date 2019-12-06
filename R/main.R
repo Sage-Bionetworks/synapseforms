@@ -5,12 +5,13 @@
 #' same output directory.
 #'
 #' @export
+#' @param syn Synapse login object
 #' @param state_filter The filter that is desired to gather submissions by.
 #' @param group The groupID.
 #' @param output_dir The directory to output the submissions and csv file to.
-download_all_and_output_to_csv <- function(state_filter = "SUBMITTED_WAITING_FOR_REVIEW", # nolint
+download_all_and_output_to_csv <- function(syn, state_filter = "SUBMITTED_WAITING_FOR_REVIEW", # nolint
                                            group, output_dir) {
-  download_all_submissions_local(state_filter, group, output_dir)
+  download_all_submissions_local(syn, state_filter, group, output_dir)
   data <- convert_all_forms_to_table(directory = output_dir)
   output_submission_csv(data, output_dir)
 }
@@ -22,11 +23,12 @@ download_all_and_output_to_csv <- function(state_filter = "SUBMITTED_WAITING_FOR
 #' currently uses the format "user<profileId>_form<dataFormHandleId>".
 #'
 #' @export
+#' @param syn Synapse login object
 #' @param state_filter The filter that is desired to gather submissions by.
 #' @param group The groupID.
-download_all_and_get_table <- function(state_filter = "SUBMITTED_WAITING_FOR_REVIEW", # nolint
+download_all_and_get_table <- function(syn, state_filter = "SUBMITTED_WAITING_FOR_REVIEW", # nolint
                                        group) {
-  file_list <- download_all_submissions_temp(state_filter, group)
+  file_list <- download_all_submissions_temp(syn, state_filter, group)
   data <- convert_all_forms_to_table(file_list)
   data
 }

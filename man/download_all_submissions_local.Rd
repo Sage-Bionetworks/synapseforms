@@ -4,11 +4,16 @@
 \alias{download_all_submissions_local}
 \title{Download all submissions locally}
 \usage{
-
-  download_all_submissions_local(state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
-  group, output_dir)
+download_all_submissions_local(
+  syn,
+  state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
+  group,
+  output_dir
+)
 }
 \arguments{
+\item{syn}{Synapse login object}
+
 \item{state_filter}{The filter that is desired to gather submissions by.}
 
 \item{group}{The groupID.}

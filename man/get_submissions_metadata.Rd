@@ -4,10 +4,15 @@
 \alias{get_submissions_metadata}
 \title{Get all submission metadata}
 \usage{
-get_submissions_metadata(state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
-  group)
+get_submissions_metadata(
+  syn,
+  state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
+  group
+)
 }
 \arguments{
+\item{syn}{Synapse login object}
+
 \item{state_filter}{The filter that is desired to gather submissions by.}
 
 \item{group}{The groupID.}

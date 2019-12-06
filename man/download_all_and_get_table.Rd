@@ -4,11 +4,15 @@
 \alias{download_all_and_get_table}
 \title{Get all submissions as single table}
 \usage{
-
-  download_all_and_get_table(state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
-  group)
+download_all_and_get_table(
+  syn,
+  state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
+  group
+)
 }
 \arguments{
+\item{syn}{Synapse login object}
+
 \item{state_filter}{The filter that is desired to gather submissions by.}
 
 \item{group}{The groupID.}

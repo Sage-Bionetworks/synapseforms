@@ -4,11 +4,15 @@
 \alias{download_all_submissions_temp}
 \title{Download all submissions}
 \usage{
-
-  download_all_submissions_temp(state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
-  group)
+download_all_submissions_temp(
+  syn,
+  state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
+  group
+)
 }
 \arguments{
+\item{syn}{Synapse login object}
+
 \item{state_filter}{The filter that is desired to gather submissions by.}
 
 \item{group}{The groupID.}

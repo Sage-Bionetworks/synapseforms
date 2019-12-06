@@ -1,11 +1,12 @@
 #' Get the presigned url for downloading the submission file.
 #'
+#' @param syn Synapse login object
 #' @param file_handle_id The fileHandleId for the submission.
 #' @param form_data_id The formDataId for the submission.
 #' @return The presigned URL.
-get_ps_url <- function(file_handle_id, form_data_id) {
+get_ps_url <- function(syn, file_handle_id, form_data_id) {
   body <- glue::glue('{{"requestedFiles": [{{"fileHandleId": "{file_handle_id}", "associateObjectId": "{form_data_id}", "associateObjectType": "FormData"}}], "includePreSignedURLs": true,"includeFileHandles": false}}') # nolint
-  file_url <- synapser::synRestPOST(
+  file_url <- syn$restPOST(
     uri = "https://repo-prod.prod.sagebase.org/file/v1/fileHandle/batch",
     body = body
   )
@@ -38,10 +39,11 @@ download_form_file <- function(ps_url, name, output_dir = NULL) {
 #' Downloads the submission to a temporary
 #' file and returns the name of the file.
 #'
+#' @param syn Synapse login object
 #' @inheritParams get_ps_url
 #' @return The name of the temporary file.
-get_form_temp <- function(file_handle_id, form_data_id) {
-  ps_url <- get_ps_url(file_handle_id, form_data_id)
+get_form_temp <- function(syn, file_handle_id, form_data_id) {
+  ps_url <- get_ps_url(syn, file_handle_id, form_data_id)
   filename <- tempfile(
     pattern = glue::glue("form_{file_handle_id}_data_{form_data_id}"),
     fileext = ".json"

@@ -2,12 +2,13 @@
 #'
 #' Get the metadata for all submissions.
 #'
+#' @param syn Synapse login object
 #' @param state_filter The filter that is desired to gather submissions by.
 #' @param group The groupID.
 #' @return A dataframe of the submission metadata.
-get_submissions_metadata <- function(state_filter = "SUBMITTED_WAITING_FOR_REVIEW", group) { # nolint
+get_submissions_metadata <- function(syn, state_filter = "SUBMITTED_WAITING_FOR_REVIEW", group) { # nolint
   body <- glue::glue('{{"filterByState":["{state_filter}"],"groupId":"{group}"}}') # nolint
-  jsonfile <- synapser::synRestPOST(
+  jsonfile <- syn$restPOST(
     uri = "https://repo-prod.prod.sagebase.org/repo/v1/form/data/list/reviewer",
     body = body
   )

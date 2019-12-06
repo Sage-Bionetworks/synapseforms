@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{output_submission_csv}
 \alias{output_submission_csv}
-\title{Write the data to a csv file.}
+\title{Write the data to a csv file}
 \usage{
 output_submission_csv(data, output_dir)
 }
