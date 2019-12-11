@@ -4,12 +4,16 @@
 \alias{get_submission_names}
 \title{Get all submission names}
 \usage{
-get_submission_names(data)
+get_submission_names(data, is_tidier = FALSE)
 }
 \arguments{
-\item{data}{Dataframe or tibble with at least two columns,
-`variables` and a submission with the name of the
-submission as the column name.}
+\item{data}{Dataframe with at least two columns,
+`variables` and `submission_name` if untidy. If `is_tidier`
+is `TRUE`, then there should be columns `submission`, `section`,
+and `response`.}
+
+\item{is_tidier}{True if `data` is in the form given by
+[synapseforms::make_tidier_table()].}
 }
 \value{
 A vector of the submission names.

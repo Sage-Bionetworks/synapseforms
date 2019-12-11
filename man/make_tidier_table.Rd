@@ -12,6 +12,6 @@ make_tidier_table(data)
 \description{
 Make the submissions table more tidy by moving
 column names to a key column and spreading out
-the varaibles into three sections, "section",
+the variables into three sections, "section",
 "variable", and "sub_variable".
 }

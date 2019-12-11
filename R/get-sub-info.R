@@ -51,6 +51,7 @@ get_main_sections <- function(data, submission_name, is_tidier = FALSE) {
 #' submission. Only returns sections that are not all NA.
 #'
 #' @inheritParams get_main_sections
+#' @keywords internal
 get_main_sections_tidier <- function(data, submission_name) {
   if (!submission_name %in% data$submission) {
     return(NULL)

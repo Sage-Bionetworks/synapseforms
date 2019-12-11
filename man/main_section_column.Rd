@@ -14,14 +14,14 @@ to indicate the main section.}
 }
 \value{
 A dataframe or tibble where the `variables`
-  have been broken into two columns, `main_section` and
+  have been broken into two columns, `section` and
   `variable`.
 }
 \description{
 Get a table with the main section as a separate column.
 This assumes the data is the unlisted data with variables
 that are separated by periods. It takes the first string
-before the period and puts it in a new column, `main_section`,
+before the period and puts it in a new column, `section`,
 and puts the rest of the variable string in a `variable`
 column.
 }
