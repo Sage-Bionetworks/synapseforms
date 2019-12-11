@@ -86,7 +86,7 @@ get_json_unlisted_table <- function(filepath, name = NULL) {
 #' Get a table with the main section as a separate column.
 #' This assumes the data is the unlisted data with variables
 #' that are separated by periods. It takes the first string
-#' before the period and puts it in a new column, `main_section`,
+#' before the period and puts it in a new column, `section`,
 #' and puts the rest of the variable string in a `variable`
 #' column.
 #'
@@ -95,12 +95,12 @@ get_json_unlisted_table <- function(filepath, name = NULL) {
 #'   periods. The first string before the period is assumed
 #'   to indicate the main section.
 #' @return A dataframe or tibble where the `variables`
-#'   have been broken into two columns, `main_section` and
+#'   have been broken into two columns, `section` and
 #'   `variable`.
 main_section_column <- function(data) {
   new_table <- tidyr::separate(
     data, "variables",
-    into = c("main_section", "variable"),
+    into = c("section", "variable"),
     sep = "[.]",
     remove = TRUE,
     extra = "merge"

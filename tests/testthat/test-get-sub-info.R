@@ -4,14 +4,46 @@ data <- tibble::tribble(
   ~variables, ~sub1, ~sub2, ~sub3, ~sub4,
   "a.1", "Jim", "Sally", "Alice", NA,
   "a.2", "Smith", "Quackenbush", "Patton", NA,
-  "b.1",  1, NA, 3, 4,
+  "b.1",  "1", NA, "3", "4",
   "b.1.i", "a", NA, "c", "d",
   "c.1.i", TRUE, NA, FALSE, NA,
   "c.2", "yes", "no", "no", NA,
-  "d.i", NA, 3, 5, NA
+  "d.i", NA, "3", "5", NA
 )
 
-test_that("get_main_sections returns correct sections", {
+data_tidier <- tibble::tribble(
+  ~submission, ~section, ~variable, ~sub_variable, ~response,
+  "sub1", "a", "1", NA, "Jim",
+  "sub1", "a", "2", NA, "Smith",
+  "sub1", "b", "1", NA, "1",
+  "sub1", "b", "1", "i", "a",
+  "sub1", "c", "1", "i", TRUE,
+  "sub1", "c", "2", NA, "yes",
+  "sub1", "d", "i", NA, NA,
+  "sub2", "a", "1", NA, "Sally",
+  "sub2", "a", "2", NA, "Quackenbush",
+  "sub2", "b", "1", NA, NA,
+  "sub2", "b", "1", "i", NA,
+  "sub2", "c", "1", "i", NA,
+  "sub2", "c", "2", NA, "no",
+  "sub2", "d", "i", NA, "3",
+  "sub3", "a", "1", NA, "Alice",
+  "sub3", "a", "2", NA, "Patton",
+  "sub3", "b", "1", NA, "3",
+  "sub3", "b", "1", "i", "c",
+  "sub3", "c", "1", "i", FALSE,
+  "sub3", "c", "2", NA, "no",
+  "sub3", "d", "i", NA, "5",
+  "sub4", "a", "1", NA, NA,
+  "sub4", "a", "2", NA, NA,
+  "sub4", "b", "1", NA, "4",
+  "sub4", "b", "1", "i", "d",
+  "sub4", "c", "1", "i", NA,
+  "sub4", "c", "2", NA, NA,
+  "sub4", "d", "i", NA, NA,
+)
+
+test_that("get_main_sections returns correct sections with untidy data", {
   res1 <- get_main_sections(data, "sub1")
   res2 <- get_main_sections(data, "sub2")
   res3 <- get_main_sections(data, "sub3")
@@ -24,9 +56,29 @@ test_that("get_main_sections returns correct sections", {
   expect_null(res5)
 })
 
-test_that("get_submission_names returns correct names", {
+test_that("get_main_sections returns correct sections with tidier data", {
+  res1 <- get_main_sections(data_tidier, "sub1", TRUE)
+  res2 <- get_main_sections(data_tidier, "sub2", TRUE)
+  res3 <- get_main_sections(data_tidier, "sub3", TRUE)
+  res4 <- get_main_sections(data_tidier, "sub4", TRUE)
+  res5 <- get_main_sections(data_tidier, "sub5", TRUE)
+  expect_equal(res1, c("a", "b", "c"))
+  expect_equal(res2, c("a", "c", "d"))
+  expect_equal(res3, c("a", "b", "c", "d"))
+  expect_equal(res4, "b")
+  expect_null(res5)
+})
+
+test_that("get_submission_names returns correct names with untidy data", {
   res1 <- get_submission_names(data)
   res2 <- get_submission_names(data[, 1:3])
+  expect_equal(res1, c("sub1", "sub2", "sub3", "sub4"))
+  expect_equal(res2, c("sub1", "sub2"))
+})
+
+test_that("get_submission_names returns correct names with tidier data", {
+  res1 <- get_submission_names(data_tidier, TRUE)
+  res2 <- get_submission_names(data_tidier[1:14,], TRUE)
   expect_equal(res1, c("sub1", "sub2", "sub3", "sub4"))
   expect_equal(res2, c("sub1", "sub2"))
 })
