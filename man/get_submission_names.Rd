@@ -4,20 +4,29 @@
 \alias{get_submission_names}
 \title{Get all submission names}
 \usage{
-get_submission_names(data, is_tidier = FALSE)
+get_submission_names(data)
 }
 \arguments{
-\item{data}{Dataframe with at least two columns,
-`variables` and `submission_name` if untidy. If `is_tidier`
-is `TRUE`, then there should be columns `submission`, `section`,
-and `response`.}
-
-\item{is_tidier}{True if `data` is in the form given by
-[synapseforms::make_tidier_table()].}
+\item{data}{Dataframe with at least three columns,
+`submission`, `section`, and `response`.}
 }
 \value{
 A vector of the submission names.
 }
 \description{
-Get all submission names.
+Get all submission names. Requires data in the form
+returned from `make_tidier_table()`.
+}
+\examples{
+data <- tibble::tribble(
+  ~variables, ~sub1, ~sub2,
+  "naming.first_name", "Mel", "Jimothy",
+  "naming.last_name", "Jovin", "Smithery",
+  "exercise.pushups.min", "10", NA,
+  "exercise.pushups.max", "20", NA,
+  "exercise.pullups.reps.min", "1", NA,
+  "exercise.pullups.reps.max", "2", NA
+)
+data <- make_tidier_table(data)
+get_submission_names(data)
 }

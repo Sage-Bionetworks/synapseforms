@@ -4,26 +4,36 @@
 \alias{get_main_sections}
 \title{Get high level sections of form}
 \usage{
-get_main_sections(data, submission_name, is_tidier = FALSE)
+get_main_sections(data, submission_name)
 }
 \arguments{
-\item{data}{Dataframe with at least two columns,
-`variables` and `submission_name` if untidy. If `is_tidier`
-is `TRUE`, then there should be columns `submission`, `section`,
-and `response`.}
+\item{data}{Dataframe with at least three columns,
+`submission`, `section`, and `response`.}
 
 \item{submission_name}{Name of the submission.}
-
-\item{is_tidier}{True if `data` is in the form given by
-[synapseforms::make_tidier_table()].}
 }
 \value{
 A vector of the high level sections from
   the form for which the submission is not all NA.
-  If `submission_name` is not in `names(data)` or `submission`
+  If `submission_name` is not in the `submission`
   column, then returns `NULL`.
 }
 \description{
 Get the high level sections from the form for a given
 submission. Only returns sections that are not all NA.
+Requires data in the form returned from `make_tidier_table()`.
+}
+\examples{
+data <- tibble::tribble(
+  ~variables, ~sub1, ~sub2,
+  "naming.first_name", "Mel", "Jimothy",
+  "naming.last_name", "Jovin", "Smithery",
+  "exercise.pushups.min", "10", NA,
+  "exercise.pushups.max", "20", NA,
+  "exercise.pullups.reps.min", "1", NA,
+  "exercise.pullups.reps.max", "2", NA
+)
+data <- make_tidier_table(data)
+get_main_sections(data, "sub1")
+get_main_sections(data, "sub2")
 }

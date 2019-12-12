@@ -7,11 +7,34 @@
 make_tidier_table(data)
 }
 \arguments{
-\item{data}{Data frame with the submissions.}
+\item{data}{Data frame with the submissions in the form
+given by `download_all_and_get_table()`, which has a
+"variables" column and a column for each submission
+with the submission name as the column name.}
 }
 \description{
-Make the submissions table more tidy by moving
-column names to a key column and spreading out
-the variables into three sections, "section",
-"variable", and "sub_variable".
+Make the submissions table more tidy. New table will have
+columns "submission", "section", "variable", "sub_variable",
+"response". Submission names are moved to the "submission"
+column from the original column names. Submission responses
+are moved to the "response" column, and "variables" that
+correspond to the responses are broken into the three
+columns "section", "variable", "sub_variable". These three
+columns fill from the left, leaving `NA` in the right-most
+column(s) if there are not enough pieces to the variable or
+merging the remaining variable pieces if there are more
+than three pieces to the variable. See the example for
+clarification.
+}
+\examples{
+data <- tibble::tribble(
+  ~variables, ~sub1, ~sub2,
+  "naming.first_name", "Mel", "Jimothy",
+  "naming.last_name", "Jovin", "Smithery",
+  "exercise.pushups.min", "10", "3",
+  "exercise.pushups.max", "20", "12",
+  "exercise.pullups.reps.min", "1", "1",
+  "exercise.pullups.reps.max", "2", "3"
+)
+tidier_data <- make_tidier_table(data)
 }
