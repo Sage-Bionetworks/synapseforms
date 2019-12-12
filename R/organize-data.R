@@ -19,7 +19,6 @@
 #'   "variables" column and a column for each submission
 #'   with the submission name as the column name.
 #' @examples
-#' \dontrun{
 #' data <- tibble::tribble(
 #'   ~variables, ~sub1, ~sub2,
 #'   "naming.first_name", "Mel", "Jimothy",
@@ -30,7 +29,6 @@
 #'   "exercise.pullups.reps.max", "2", "3"
 #' )
 #' tidier_data <- make_tidier_table(data)
-#' }
 make_tidier_table <- function(data) {
   data <- tidyr::gather(
     data,

@@ -27,7 +27,6 @@ than three pieces to the variable. See the example for
 clarification.
 }
 \examples{
-\dontrun{
 data <- tibble::tribble(
   ~variables, ~sub1, ~sub2,
   "naming.first_name", "Mel", "Jimothy",
@@ -38,5 +37,4 @@ data <- tibble::tribble(
   "exercise.pullups.reps.max", "2", "3"
 )
 tidier_data <- make_tidier_table(data)
-}
 }

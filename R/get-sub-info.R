@@ -13,7 +13,6 @@
 #'   If `submission_name` is not in the `submission`
 #'   column, then returns `NULL`.
 #' @examples
-#' \dontrun{
 #' data <- tibble::tribble(
 #'   ~variables, ~sub1, ~sub2,
 #'   "naming.first_name", "Mel", "Jimothy",
@@ -26,7 +25,6 @@
 #' data <- make_tidier_table(data)
 #' get_main_sections(data, "sub1")
 #' get_main_sections(data, "sub2")
-#' }
 get_main_sections <- function(data, submission_name) {
   if (!submission_name %in% data$submission) {
     return(NULL)
@@ -61,7 +59,6 @@ get_main_sections <- function(data, submission_name) {
 #' @inheritParams get_main_sections
 #' @return A vector of the submission names.
 #' @examples
-#' \dontrun{
 #' data <- tibble::tribble(
 #'   ~variables, ~sub1, ~sub2,
 #'   "naming.first_name", "Mel", "Jimothy",
@@ -73,7 +70,6 @@ get_main_sections <- function(data, submission_name) {
 #' )
 #' data <- make_tidier_table(data)
 #' get_submission_names(data)
-#' }
 get_submission_names <- function(data) {
   all_names <- unique(data$submission)
   all_names

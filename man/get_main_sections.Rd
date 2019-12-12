@@ -24,7 +24,6 @@ submission. Only returns sections that are not all NA.
 Requires data in the form returned from `make_tidier_table()`.
 }
 \examples{
-\dontrun{
 data <- tibble::tribble(
   ~variables, ~sub1, ~sub2,
   "naming.first_name", "Mel", "Jimothy",
@@ -37,5 +36,4 @@ data <- tibble::tribble(
 data <- make_tidier_table(data)
 get_main_sections(data, "sub1")
 get_main_sections(data, "sub2")
-}
 }
