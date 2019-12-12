@@ -54,7 +54,8 @@ get_main_sections <- function(data, submission_name) {
 
 #' Get all submission names
 #'
-#' Get all submission names.
+#' Get all submission names. Requires data in the form
+#' returned from `make_tidier_table()`.
 #'
 #' @export
 #' @inheritParams get_main_sections

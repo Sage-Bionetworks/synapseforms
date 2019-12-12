@@ -14,7 +14,8 @@ get_submission_names(data)
 A vector of the submission names.
 }
 \description{
-Get all submission names.
+Get all submission names. Requires data in the form
+returned from `make_tidier_table()`.
 }
 \examples{
 \dontrun{
