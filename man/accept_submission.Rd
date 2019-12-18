@@ -18,5 +18,8 @@ The response from the acceptance call as a list containing
 \description{
 Accept a submission. This sets the submission status
 `state` to `ACCEPTED`, and updates the review elements,
-`reviewedOn` and `reviewedBy`.
+`reviewedOn` and `reviewedBy`. Note: this function will
+throw an error if the REST call to Synapse fails; this could
+happen if the user does not have needed permissions, or
+the `form_data_id` specified does not exist.
 }

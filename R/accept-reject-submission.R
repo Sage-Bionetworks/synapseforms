@@ -3,7 +3,10 @@
 #' Reject a submission and give a reason. This sets the
 #' submission status `state` to `REJECTED`, and updates the
 #' review elements, `reviewedOn`, `reviewedBy`, and
-#' `rejectionMessage`.`
+#' `rejectionMessage`.` Note: this function will
+#' throw an error if the REST call to Synapse fails; this could
+#' happen if the user does not have needed permissions, or
+#' the `form_data_id` specified does not exist.
 #'
 #' @export
 #' @inheritParams download_all_and_get_table
@@ -29,7 +32,10 @@ reject_submission <- function(syn, form_data_id, reason) {
 #'
 #' Accept a submission. This sets the submission status
 #' `state` to `ACCEPTED`, and updates the review elements,
-#' `reviewedOn` and `reviewedBy`.
+#' `reviewedOn` and `reviewedBy`. Note: this function will
+#' throw an error if the REST call to Synapse fails; this could
+#' happen if the user does not have needed permissions, or
+#' the `form_data_id` specified does not exist.
 #'
 #' @export
 #' @inheritParams reject_submission
