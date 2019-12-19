@@ -8,6 +8,9 @@
 #' happen if the user does not have needed permissions, or
 #' the `form_data_id` specified does not exist.
 #'
+#' WARNING: Once a submission is rejected, the state can
+#' not be changed again.
+#'
 #' @export
 #' @inheritParams download_all_and_get_table
 #' @param form_data_id The formDataId of the submission.
@@ -36,6 +39,9 @@ reject_submission <- function(syn, form_data_id, reason) {
 #' throw an error if the REST call to Synapse fails; this could
 #' happen if the user does not have needed permissions, or
 #' the `form_data_id` specified does not exist.
+#'
+#' WARNING: Once a submission is rejected, the state can
+#' not be changed again.
 #'
 #' @export
 #' @inheritParams reject_submission

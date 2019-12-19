@@ -23,3 +23,7 @@ throw an error if the REST call to Synapse fails; this could
 happen if the user does not have needed permissions, or
 the `form_data_id` specified does not exist.
 }
+\details{
+WARNING: Once a submission is rejected, the state can
+not be changed again.
+}
