@@ -26,4 +26,6 @@ the `form_data_id` specified does not exist.
 \details{
 WARNING: Once a submission is rejected, the state can
 not be changed again.
+
+See \href{https://docs.synapse.org/rest/POST/form/data/accept.html}{Synapse REST API}. # nolint
 }

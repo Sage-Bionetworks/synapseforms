@@ -11,6 +11,8 @@
 #' WARNING: Once a submission is rejected, the state can
 #' not be changed again.
 #'
+#' See \href{https://docs.synapse.org/rest/POST/form/data/id/reject.html}{Synapse REST API}. # nolint
+#'
 #' @export
 #' @inheritParams download_all_and_get_table
 #' @param form_data_id The formDataId of the submission.
@@ -42,6 +44,8 @@ reject_submission <- function(syn, form_data_id, reason) {
 #'
 #' WARNING: Once a submission is rejected, the state can
 #' not be changed again.
+#'
+#' See \href{https://docs.synapse.org/rest/POST/form/data/accept.html}{Synapse REST API}. # nolint
 #'
 #' @export
 #' @inheritParams reject_submission
