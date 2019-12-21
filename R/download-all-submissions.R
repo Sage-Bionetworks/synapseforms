@@ -45,14 +45,7 @@ download_all_submissions_temp <- function(syn, state_filter = "SUBMITTED_WAITING
       get_form_temp(syn, handle, id)
     }
   )
-  desired_names <- purrr::map2(
-    subs_meta$dataFileHandleId,
-    subs_meta$createdBy,
-    function(handle, user) {
-      glue::glue("User{user}_file{handle}")
-    }
-  )
-  names(file_list) <- desired_names
+  names(file_list) <- subs_meta$formDataId
 
   file_list
 }
