@@ -38,6 +38,13 @@ get_json_as_df <- function(data) {
   temp <- tempfile()
   jsonlite::write_json(data, temp)
   data_df <- jsonlite::fromJSON(temp, simplifyDataFrame = TRUE)
+  # Fix dataframe columns into list columns
+  data_df <- data_df %>% dplyr::mutate(
+    submissionStatus_submittedOn = submissionStatus$submittedOn,
+    submissionStatus_state = submissionStatus$state,
+    submissionStatus = NULL
+  )
+  # Change list columns to character columns
   data_df <- tidyr::unnest(data_df, names(data_df))
   data_df
 }
