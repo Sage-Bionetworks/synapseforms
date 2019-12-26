@@ -69,7 +69,7 @@ get_main_sections <- function(data, id) {
 #'   "exercise.pullups.reps.max", "2", NA
 #' )
 #' data <- make_tidier_table(data)
-#' get_ids(data)
+#' get_submission_ids(data)
 get_submission_ids <- function(data) {
   all_ids <- unique(data$form_data_id)
   all_ids
