@@ -4,18 +4,18 @@
 \alias{get_main_sections}
 \title{Get high level sections of form}
 \usage{
-get_main_sections(data, submission_name)
+get_main_sections(data, id)
 }
 \arguments{
 \item{data}{Dataframe with at least three columns,
-`submission`, `section`, and `response`.}
+`form_data_id`, `section`, and `response`.}
 
-\item{submission_name}{Name of the submission.}
+\item{id}{form_data_id of the submission.}
 }
 \value{
 A vector of the high level sections from
   the form for which the submission is not all NA.
-  If `submission_name` is not in the `submission`
+  If `id` is not in the `form_data_id`
   column, then returns `NULL`.
 }
 \description{

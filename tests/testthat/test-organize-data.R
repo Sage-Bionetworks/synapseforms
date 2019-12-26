@@ -8,7 +8,7 @@ test_that("make_tidier_table returns tidier table", {
     stringsAsFactors = FALSE
   )
   tidy_data <- data.frame(
-    submission = c(
+    form_data_id = c(
       "sub1", "sub1", "sub1", "sub1",
       "sub2", "sub2", "sub2", "sub2"
     ),

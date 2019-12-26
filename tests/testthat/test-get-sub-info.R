@@ -1,7 +1,7 @@
 context("get-sub-info.R")
 
 data <- tibble::tribble(
-  ~submission, ~section, ~variable, ~sub_variable, ~response,
+  ~form_data_id, ~section, ~variable, ~sub_variable, ~response,
   "sub1", "a", "1", NA, "Jim",
   "sub1", "a", "2", NA, "Smith",
   "sub1", "b", "1", NA, "1",
@@ -45,9 +45,9 @@ test_that("get_main_sections returns correct sections", {
   expect_null(res5)
 })
 
-test_that("get_submission_names returns correct names", {
-  res1 <- get_submission_names(data)
-  res2 <- get_submission_names(data[1:14,])
+test_that("get_submission_ids returns correct names", {
+  res1 <- get_submission_ids(data)
+  res2 <- get_submission_ids(data[1:14,])
   expect_equal(res1, c("sub1", "sub2", "sub3", "sub4"))
   expect_equal(res2, c("sub1", "sub2"))
 })
