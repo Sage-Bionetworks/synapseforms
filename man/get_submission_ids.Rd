@@ -28,5 +28,5 @@ data <- tibble::tribble(
   "exercise.pullups.reps.max", "2", NA
 )
 data <- make_tidier_table(data)
-get_ids(data)
+get_submission_ids(data)
 }
