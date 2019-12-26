@@ -6,11 +6,11 @@
 #'
 #' @export
 #' @param data Dataframe with at least three columns,
-#'  `submission`, `section`, and `response`.
-#' @param submission_name Name of the submission.
+#'  `form_data_id`, `section`, and `response`.
+#' @param id form_data_id of the submission.
 #' @return A vector of the high level sections from
 #'   the form for which the submission is not all NA.
-#'   If `submission_name` is not in the `submission`
+#'   If `id` is not in the `form_data_id`
 #'   column, then returns `NULL`.
 #' @examples
 #' data <- tibble::tribble(
@@ -25,11 +25,11 @@
 #' data <- make_tidier_table(data)
 #' get_main_sections(data, "sub1")
 #' get_main_sections(data, "sub2")
-get_main_sections <- function(data, submission_name) {
-  if (!submission_name %in% data$submission) {
+get_main_sections <- function(data, id) {
+  if (!id %in% data$form_data_id) {
     return(NULL)
   }
-  data <- data[which(data$submission == submission_name), ]
+  data <- data[which(data$form_data_id == id), ]
   sections <- unique(data$section)
   section_indices <- purrr::map(
     sections,
@@ -50,9 +50,9 @@ get_main_sections <- function(data, submission_name) {
   sections[!unlist(all_na)]
 }
 
-#' Get all submission names
+#' Get all submission ids
 #'
-#' Get all submission names. Requires data in the form
+#' Get all submission ids. Requires data in the form
 #' returned from `make_tidier_table()`.
 #'
 #' @export
@@ -69,8 +69,8 @@ get_main_sections <- function(data, submission_name) {
 #'   "exercise.pullups.reps.max", "2", NA
 #' )
 #' data <- make_tidier_table(data)
-#' get_submission_names(data)
-get_submission_names <- function(data) {
-  all_names <- unique(data$submission)
-  all_names
+#' get_ids(data)
+get_submission_ids <- function(data) {
+  all_ids <- unique(data$form_data_id)
+  all_ids
 }

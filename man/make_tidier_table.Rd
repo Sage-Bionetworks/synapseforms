@@ -10,12 +10,12 @@ make_tidier_table(data)
 \item{data}{Data frame with the submissions in the form
 given by `download_all_and_get_table()`, which has a
 "variables" column and a column for each submission
-with the submission name as the column name.}
+with the form_data_id as the column name.}
 }
 \description{
 Make the submissions table more tidy. New table will have
-columns "submission", "section", "variable", "sub_variable",
-"response". Submission names are moved to the "submission"
+columns "form_data_id", "section", "variable", "sub_variable",
+"response". Submission ids are moved to the "form_data_id"
 column from the original column names. Submission responses
 are moved to the "response" column, and "variables" that
 correspond to the responses are broken into the three
