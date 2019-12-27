@@ -17,12 +17,8 @@ test_that("make_tidier_table returns tidier table", {
       "s1", "s1", "s2", "s2"
     ),
     variable = c(
-      "a", "b", "a", "b",
-      "a", "b", "a", "b"
-    ),
-    sub_variable = c(
-      NA, "1", "1", "1.apple",
-      NA, "1", "1", "1.apple"
+      "a", "b.1", "a.1", "b.1.apple",
+      "a", "b.1", "a.1", "b.1.apple"
     ),
     response = c(
       NA, "yes", "no", "jane",
