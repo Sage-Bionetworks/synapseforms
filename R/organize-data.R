@@ -1,16 +1,13 @@
 #' Make submissions table more tidy
 #'
 #' Make the submissions table more tidy. New table will have
-#' columns "form_data_id", "section", "variable", "sub_variable",
+#' columns "form_data_id", "section", "variable",
 #' "response". Submission ids are moved to the "form_data_id"
 #' column from the original column names. Submission responses
 #' are moved to the "response" column, and "variables" that
-#' correspond to the responses are broken into the three
-#' columns "section", "variable", "sub_variable". These three
-#' columns fill from the left, leaving `NA` in the right-most
-#' column(s) if there are not enough pieces to the variable or
-#' merging the remaining variable pieces if there are more
-#' than three pieces to the variable. See the example for
+#' correspond to the responses are broken into the two
+#' columns "section" and "variable". These two
+#' columns fill from the left. See the example for
 #' clarification.
 #'
 #' @export
@@ -39,7 +36,7 @@ make_tidier_table <- function(data) {
   data <- tidyr::separate(
     data,
     variables,
-    into = c("section", "variable", "sub_variable"),
+    into = c("section", "variable"),
     sep = "[.]",
     remove = TRUE,
     extra = "merge",
@@ -49,7 +46,6 @@ make_tidier_table <- function(data) {
     "form_data_id",
     "section",
     "variable",
-    "sub_variable",
     "response"
   )]
   data
