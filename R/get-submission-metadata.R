@@ -1,11 +1,34 @@
-#' Get all submission metadata
+#' Get all submission metadata by state filter
 #'
-#' Get the metadata for all submissions.
+#' Get the metadata for all submissions by state filter:
+#' WAITING_FOR_SUBMISSION, SUBMITTED_WAITING_FOR_REVIEW,
+#' ACCEPTED, REJECTED.
 #'
 #' @param syn Synapse login object
 #' @param state_filter The filter that is desired to gather submissions by.
+#'   Filters are: `WAITING_FOR_SUBMISSION`, `SUBMITTED_WAITING_FOR_REVIEW`,
+#'   `ACCEPTED`, `REJECTED`. Only accepts one filter.
 #' @param group The groupID.
 #' @return A dataframe of the submission metadata.
+#' @examples
+#' \dontrun{
+#'
+#' # Note: Must have permissions to access group.
+#' # The example group will not work for most individuals.
+#'
+#' syn <- log_into_synapse()
+#'
+#' sub_meta_to_review <- get_submissions_metadata(
+#'   syn = syn,
+#'   group = 13
+#' )
+#'
+#' sub_meta_accepted <- get_submissions_metadata(
+#'   syn = syn,
+#'   state_filter = "ACCEPTED",
+#'   group = 13
+#' )
+#' }
 get_submissions_metadata <- function(syn, state_filter = "SUBMITTED_WAITING_FOR_REVIEW", group) { # nolint
   body <- glue::glue('{{"filterByState":["{state_filter}"],"groupId":"{group}"}}') # nolint
   response <- syn$restPOST(
