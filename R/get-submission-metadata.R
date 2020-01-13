@@ -9,7 +9,8 @@
 #'   Filters are: `WAITING_FOR_SUBMISSION`, `SUBMITTED_WAITING_FOR_REVIEW`,
 #'   `ACCEPTED`, `REJECTED`. Only accepts one filter.
 #' @param group The groupID.
-#' @return A dataframe of the submission metadata.
+#' @return A dataframe of the submission metadata, or NULL if there are
+#'   no submissions that meet the criteria.
 #' @examples
 #' \dontrun{
 #'
@@ -35,6 +36,9 @@ get_submissions_metadata <- function(syn, state_filter = "SUBMITTED_WAITING_FOR_
     uri = "https://repo-prod.prod.sagebase.org/repo/v1/form/data/list/reviewer",
     body = body
   )
+  if (length(response$page) == 0) {
+    return(NULL)
+  }
   metadata <- get_json_as_df(response$page)
 
   while (length(response) == 2) {
