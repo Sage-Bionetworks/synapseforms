@@ -20,7 +20,8 @@ Filters are: `WAITING_FOR_SUBMISSION`, `SUBMITTED_WAITING_FOR_REVIEW`,
 \item{group}{The groupID.}
 }
 \value{
-A dataframe of the submission metadata.
+A dataframe of the submission metadata, or NULL if there are
+  no submissions that meet the criteria.
 }
 \description{
 Get the metadata for all submissions by state filter:
