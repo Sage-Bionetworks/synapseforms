@@ -35,3 +35,18 @@ submit_form_for_review <- function(syn, form_data_id) {
   )
   form
 }
+
+#' Delete a form
+#'
+#' Delete a form from the database, and caller must
+#' have SUBMIT privileges in formGroup ACL.
+#'
+#' @export
+#' @inheritParams get_submissions_metadata
+#' @inheritParams submit_form_for_review
+#' @return None
+delete_form <- function(syn, form_data_id) {
+  syn$restDELETE(
+    uri = glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}")
+  )
+}
