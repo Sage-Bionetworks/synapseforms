@@ -9,6 +9,8 @@
 #'   Filters are: `WAITING_FOR_SUBMISSION`, `SUBMITTED_WAITING_FOR_REVIEW`,
 #'   `ACCEPTED`, `REJECTED`. Only accepts one filter.
 #' @param group The groupID.
+#' @param all_users TRUE to get all submissions in group; FALSE to get
+#'   group submissions from caller only.
 #' @return A dataframe of the submission metadata, or NULL if there are
 #'   no submissions that meet the criteria.
 #' @examples
@@ -30,10 +32,16 @@
 #'   group = 13
 #' )
 #' }
-get_submissions_metadata <- function(syn, state_filter = "SUBMITTED_WAITING_FOR_REVIEW", group) { # nolint
+get_submissions_metadata <- function(syn,
+                                     state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
+                                     group, all_users = TRUE) {
+  uri <- "https://repo-prod.prod.sagebase.org/repo/v1/form/data/list/reviewer"
+  if (!all_users) {
+    uri <- "https://repo-prod.prod.sagebase.org/repo/v1/form/data/list"
+  }
   body <- glue::glue('{{"filterByState":["{state_filter}"],"groupId":"{group}"}}') # nolint
   response <- syn$restPOST(
-    uri = "https://repo-prod.prod.sagebase.org/repo/v1/form/data/list/reviewer",
+    uri = uri,
     body = body
   )
   if (length(response$page) == 0) {
@@ -44,7 +52,7 @@ get_submissions_metadata <- function(syn, state_filter = "SUBMITTED_WAITING_FOR_
   while (length(response) == 2) {
     body <- glue::glue('{{"filterByState":["{state_filter}"],"groupId":"{group}","nextPageToken":"{response$nextPageToken}"}}') # nolint
     response <- syn$restPOST(
-      uri = "https://repo-prod.prod.sagebase.org/repo/v1/form/data/list/reviewer", # nolint
+      uri = uri,
       body = body
     )
     temp_metadata <- get_json_as_df(response$page)

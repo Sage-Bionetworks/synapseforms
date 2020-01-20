@@ -7,7 +7,8 @@
 get_submissions_metadata(
   syn,
   state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
-  group
+  group,
+  all_users = TRUE
 )
 }
 \arguments{
@@ -18,6 +19,9 @@ Filters are: `WAITING_FOR_SUBMISSION`, `SUBMITTED_WAITING_FOR_REVIEW`,
 `ACCEPTED`, `REJECTED`. Only accepts one filter.}
 
 \item{group}{The groupID.}
+
+\item{all_users}{TRUE to get all submissions in group; FALSE to get
+group submissions from caller only.}
 }
 \value{
 A dataframe of the submission metadata, or NULL if there are
