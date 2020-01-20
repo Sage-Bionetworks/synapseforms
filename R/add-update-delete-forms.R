@@ -17,6 +17,28 @@ add_new_form <- function(syn, group, form_name, file_handle_id) {
   form
 }
 
+#' Update form
+#'
+#' Update a form. User must be the original owner
+#' of the form and the state of the form must be either
+#' `WAITING_FOR_SUBMISSION` or `REJECTED`. Froms with the states
+#' `SUBMITTED_WAITING_FOR_REVIEW` or `ACCEPTED` are immutable.
+#' See \href{https://docs.synapse.org/rest/PUT/form/data/id.html}{Synapse REST API}. # nolint
+#'
+#' @inheritParams add_new_form
+#' @inheritParams submit_form_for_review
+update_form <- function(syn, form_name = NULL, form_data_id, file_handle_id) {
+  body <- glue::glue('{{"fileHandleId":"{file_handle_id}"}}') # nolint
+  if (!is.null(form_name)) {
+    body <- glue::glue('{{"name":"{form_name}","fileHandleId":"{file_handle_id}"}}') # nolint
+  }
+  form <- syn$restPUT(
+    uri = glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}"), # nolint
+    body = body
+  )
+  form
+}
+
 #' Submit a form for review
 #'
 #' Submit a form for review. Warning: cannot update
