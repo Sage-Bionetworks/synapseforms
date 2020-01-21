@@ -13,6 +13,7 @@ Description: The synapseforms packages gathers submission metadata
 Imports:
   curl,
   dplyr,
+  fs,
   glue,
   jsonlite,
   purrr,

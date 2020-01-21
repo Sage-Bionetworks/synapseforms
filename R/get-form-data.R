@@ -30,7 +30,7 @@ download_form_file <- function(ps_url, name, output_dir = NULL) {
   if (is.null(output_dir)) {
     curl::curl_download(ps_url, destfile = name)
   } else {
-    curl::curl_download(ps_url, destfile = glue::glue("{output_dir}{name}"))
+    curl::curl_download(ps_url, destfile = fs::path(output_dir, name))
   }
 }
 
