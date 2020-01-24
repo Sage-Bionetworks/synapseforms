@@ -46,7 +46,5 @@ download_all_submissions_temp <- function(syn, state_filter = "SUBMITTED_WAITING
       get_form_temp(syn, handle, id)
     }
   )
-  names(file_list) <- subs_meta$formDataId
-
-  file_list
+  unlist(file_list)
 }
