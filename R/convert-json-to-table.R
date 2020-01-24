@@ -20,7 +20,7 @@ convert_all_forms_to_table <- function(file_list = NULL, directory = NULL) {
   if (is.null(file_list) && !is.null(directory)) {
     all_files <- list.files(directory, pattern = ".json")
     file_list <- purrr::map(all_files, function(x) {
-      glue::glue("{output_dir}{x}")
+      fs::path(directory, x)
     })
   } else if (is.null(file_list) && is.null(directory)) {
     return(NULL)

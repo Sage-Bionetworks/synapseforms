@@ -30,6 +30,7 @@ download_all_submissions_local <- function(syn, state_filter = "SUBMITTED_WAITIN
 #'
 #' Download all submissions to temporary files.
 #'
+#' @export
 #' @param syn Synapse login object
 #' @param state_filter The filter that is desired to gather submissions by.
 #' @param group The groupID.

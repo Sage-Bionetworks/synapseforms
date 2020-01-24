@@ -44,7 +44,7 @@ get_group_acl <- function(syn, group) {
 #' @param access_control_list The access control list (ACL) in JSON form.
 update_group_acl <- function(syn, group, access_control_list) {
   acl <- syn$restPUT(
-    uri = glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/group/{id}/acl"), # nolint
+    uri = glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/group/{group}/acl"), # nolint
     body = access_control_list
   )
   acl
