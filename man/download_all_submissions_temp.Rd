@@ -18,7 +18,8 @@ download_all_submissions_temp(
 \item{group}{The groupID.}
 }
 \value{
-List of temporary filenames.
+Named list of temporary filenames, where the name is
+  the `formDataId`.
 }
 \description{
 Download all submissions to temporary files.
