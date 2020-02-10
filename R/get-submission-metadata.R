@@ -4,6 +4,7 @@
 #' WAITING_FOR_SUBMISSION, SUBMITTED_WAITING_FOR_REVIEW,
 #' ACCEPTED, REJECTED.
 #'
+#' @export
 #' @param syn Synapse login object
 #' @param state_filter The filter that is desired to gather submissions by.
 #'   Filters are: `WAITING_FOR_SUBMISSION`, `SUBMITTED_WAITING_FOR_REVIEW`,
