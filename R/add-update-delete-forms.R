@@ -69,6 +69,6 @@ submit_form_for_review <- function(syn, form_data_id) {
 #' @return None
 delete_form <- function(syn, form_data_id) {
   syn$restDELETE(
-    uri = glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}")
+    uri = glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}") # nolint
   )
 }
