@@ -6,16 +6,16 @@
 \usage{
 download_all_submissions_temp(
   syn,
-  state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
-  group
+  group,
+  state_filter = "SUBMITTED_WAITING_FOR_REVIEW"
 )
 }
 \arguments{
 \item{syn}{Synapse login object}
 
-\item{state_filter}{The filter that is desired to gather submissions by.}
-
 \item{group}{The groupID.}
+
+\item{state_filter}{The filter that is desired to gather submissions by.}
 }
 \value{
 Named list of temporary filenames, where the name is

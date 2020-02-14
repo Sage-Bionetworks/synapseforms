@@ -6,19 +6,19 @@
 \usage{
 download_all_submissions_local(
   syn,
-  state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
   group,
-  output_dir
+  output_dir,
+  state_filter = "SUBMITTED_WAITING_FOR_REVIEW"
 )
 }
 \arguments{
 \item{syn}{Synapse login object}
 
-\item{state_filter}{The filter that is desired to gather submissions by.}
-
 \item{group}{The groupID.}
 
 \item{output_dir}{The directory to output the files to.}
+
+\item{state_filter}{The filter that is desired to gather submissions by.}
 }
 \description{
 Download all submissions to a local drive.

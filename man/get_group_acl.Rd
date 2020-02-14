@@ -7,6 +7,8 @@
 get_group_acl(syn, group)
 }
 \arguments{
+\item{syn}{Synapse login object}
+
 \item{group}{The FormGroup id number.}
 }
 \value{

@@ -6,16 +6,16 @@
 \usage{
 download_all_and_get_table(
   syn,
-  state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
-  group
+  group,
+  state_filter = "SUBMITTED_WAITING_FOR_REVIEW"
 )
 }
 \arguments{
 \item{syn}{Synapse login object}
 
-\item{state_filter}{The filter that is desired to gather submissions by.}
-
 \item{group}{The groupID.}
+
+\item{state_filter}{The filter that is desired to gather submissions by.}
 }
 \description{
 Download all submissions, process into a single table. The column

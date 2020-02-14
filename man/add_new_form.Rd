@@ -4,17 +4,17 @@
 \alias{add_new_form}
 \title{Add a new form}
 \usage{
-add_new_form(syn, group, form_name, file_handle_id)
+add_new_form(syn, group, file_handle_id, form_name)
 }
 \arguments{
 \item{syn}{Synapse login object}
 
 \item{group}{The groupID.}
 
-\item{form_name}{The name for the form.}
-
 \item{file_handle_id}{A Synapse fileHandleId with the form
 data.}
+
+\item{form_name}{The name for the form.}
 }
 \description{
 Add a new form to a group. User must have SUBMIT

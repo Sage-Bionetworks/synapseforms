@@ -26,8 +26,8 @@ download_all_and_output_to_csv <- function(syn, state_filter = "SUBMITTED_WAITIN
 #' @param syn Synapse login object
 #' @param state_filter The filter that is desired to gather submissions by.
 #' @param group The groupID.
-download_all_and_get_table <- function(syn, state_filter = "SUBMITTED_WAITING_FOR_REVIEW", # nolint
-                                       group) {
+download_all_and_get_table <- function(syn, group,
+                                       state_filter = "SUBMITTED_WAITING_FOR_REVIEW") { # nolint
   file_list <- download_all_submissions_temp(syn, state_filter, group)
   data <- convert_all_forms_to_table(file_list)
   data

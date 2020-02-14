@@ -23,7 +23,8 @@ Imports:
 Suggests:
   devtools,
   lintr,
-  styler
+  styler,
+  testthat
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
