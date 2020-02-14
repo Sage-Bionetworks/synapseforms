@@ -6,22 +6,22 @@
 \usage{
 get_submissions_metadata(
   syn,
-  state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
   group,
-  all_users = TRUE
+  all_users = TRUE,
+  state_filter = "SUBMITTED_WAITING_FOR_REVIEW"
 )
 }
 \arguments{
 \item{syn}{Synapse login object}
 
-\item{state_filter}{The filter that is desired to gather submissions by.
-Filters are: `WAITING_FOR_SUBMISSION`, `SUBMITTED_WAITING_FOR_REVIEW`,
-`ACCEPTED`, `REJECTED`. Only accepts one filter.}
-
 \item{group}{The groupID.}
 
 \item{all_users}{TRUE to get all submissions in group; FALSE to get
 group submissions from caller only.}
+
+\item{state_filter}{The filter that is desired to gather submissions by.
+Filters are: `WAITING_FOR_SUBMISSION`, `SUBMITTED_WAITING_FOR_REVIEW`,
+`ACCEPTED`, `REJECTED`. Only accepts one filter.}
 }
 \value{
 A dataframe of the submission metadata, or NULL if there are

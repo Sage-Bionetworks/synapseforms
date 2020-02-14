@@ -7,6 +7,8 @@
 update_group_acl(syn, group, access_control_list)
 }
 \arguments{
+\item{syn}{Synapse login object}
+
 \item{group}{The FormGroup id number.}
 
 \item{access_control_list}{The access control list (ACL) in JSON form.}

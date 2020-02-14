@@ -33,9 +33,8 @@
 #'   group = 13
 #' )
 #' }
-get_submissions_metadata <- function(syn,
-                                     state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
-                                     group, all_users = TRUE) {
+get_submissions_metadata <- function(syn, group, all_users = TRUE,
+                                     state_filter = "SUBMITTED_WAITING_FOR_REVIEW") { # nolint
   uri <- "https://repo-prod.prod.sagebase.org/repo/v1/form/data/list/reviewer"
   if (!all_users) {
     uri <- "https://repo-prod.prod.sagebase.org/repo/v1/form/data/list"

@@ -8,7 +8,7 @@
 #' @param form_name The name for the form.
 #' @param file_handle_id A Synapse fileHandleId with the form
 #'   data.
-add_new_form <- function(syn, group, form_name, file_handle_id) {
+add_new_form <- function(syn, group, file_handle_id, form_name) {
   body <- glue::glue('{{"name":"{form_name}","fileHandleId":"{file_handle_id}"}}') # nolint
   form <- syn$restPOST(
     uri = glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data?groupId={group}"), # nolint
@@ -27,7 +27,7 @@ add_new_form <- function(syn, group, form_name, file_handle_id) {
 #'
 #' @inheritParams add_new_form
 #' @inheritParams submit_form_for_review
-update_form <- function(syn, form_name = NULL, form_data_id, file_handle_id) {
+update_form <- function(syn, form_data_id, file_handle_id, form_name = NULL) {
   body <- glue::glue('{{"fileHandleId":"{file_handle_id}"}}') # nolint
   if (!is.null(form_name)) {
     body <- glue::glue('{{"name":"{form_name}","fileHandleId":"{file_handle_id}"}}') # nolint
@@ -69,6 +69,6 @@ submit_form_for_review <- function(syn, form_data_id) {
 #' @return None
 delete_form <- function(syn, form_data_id) {
   syn$restDELETE(
-    uri = glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}")
+    uri = glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}") # nolint
   )
 }

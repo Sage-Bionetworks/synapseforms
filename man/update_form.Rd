@@ -4,17 +4,17 @@
 \alias{update_form}
 \title{Update form}
 \usage{
-update_form(syn, form_name = NULL, form_data_id, file_handle_id)
+update_form(syn, form_data_id, file_handle_id, form_name = NULL)
 }
 \arguments{
 \item{syn}{Synapse login object}
-
-\item{form_name}{The name for the form.}
 
 \item{form_data_id}{The formDataId for the form.}
 
 \item{file_handle_id}{A Synapse fileHandleId with the form
 data.}
+
+\item{form_name}{The name for the form.}
 }
 \description{
 Update a form. User must be the original owner

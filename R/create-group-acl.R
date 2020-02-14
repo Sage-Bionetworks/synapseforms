@@ -25,6 +25,7 @@ create_new_form_group <- function(syn, name) {
 #' Get the Access Control List for a FormGroup.
 #' See \href{https://docs.synapse.org/rest/POST/form/group/id/acl.html}{Synapse REST API}. # nolint
 #'
+#' @inheritParams create_new_form_group
 #' @param group The FormGroup id number.
 #' @return The Access Control List (ACL) as a list.
 get_group_acl <- function(syn, group) {
