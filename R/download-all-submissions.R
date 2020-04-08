@@ -8,7 +8,13 @@
 #' @param output_dir The directory to output the files to.
 download_all_submissions_local <- function(syn, group, output_dir,
                                            state_filter = "SUBMITTED_WAITING_FOR_REVIEW") { # nolint
-  subs_meta <- get_submissions_metadata(syn, state_filter, group)
+  subs_meta <- get_submissions_metadata(
+    syn,
+    group = group,
+    all_users = TRUE,
+    state_filter = state_filter
+  )
+
   ps_url_list <- purrr::map2(
     subs_meta$dataFileHandleId,
     subs_meta$formDataId,
@@ -38,7 +44,12 @@ download_all_submissions_local <- function(syn, group, output_dir,
 #'   the `formDataId`.
 download_all_submissions_temp <- function(syn, group,
                                           state_filter = "SUBMITTED_WAITING_FOR_REVIEW") { # nolint
-  subs_meta <- get_submissions_metadata(syn, state_filter, group)
+  subs_meta <- get_submissions_metadata(
+    syn,
+    group = group,
+    all_users = TRUE,
+    state_filter = state_filter
+  )
 
   file_list <- purrr::map2(
     subs_meta$dataFileHandleId,
