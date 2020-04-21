@@ -4,6 +4,7 @@
 #' permission on the ACL for the group.
 #' See \href{https://docs.synapse.org/rest/POST/form/data.html}{Synapse REST API}. # nolint
 #'
+#' @export
 #' @inheritParams get_submissions_metadata
 #' @param form_name The name for the form.
 #' @param file_handle_id A Synapse fileHandleId with the form
@@ -25,6 +26,7 @@ add_new_form <- function(syn, group, file_handle_id, form_name) {
 #' `SUBMITTED_WAITING_FOR_REVIEW` or `ACCEPTED` are immutable.
 #' See \href{https://docs.synapse.org/rest/PUT/form/data/id.html}{Synapse REST API}. # nolint
 #'
+#' @export
 #' @inheritParams add_new_form
 #' @inheritParams submit_form_for_review
 update_form <- function(syn, form_data_id, file_handle_id, form_name = NULL) {
