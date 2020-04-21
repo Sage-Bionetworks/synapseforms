@@ -67,6 +67,8 @@ get_submissions_metadata <- function(syn, group, all_users = TRUE,
 #'
 #' @keywords internal
 #' @param data The json submission metadata.
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 get_json_as_df <- function(data) {
   # Write to tempfile because the data is not a json string or txt,
   # which is what jsonlite wants; this solves the problem.
@@ -75,8 +77,8 @@ get_json_as_df <- function(data) {
   data_df <- jsonlite::fromJSON(temp, simplifyDataFrame = TRUE)
   # Fix dataframe columns into list columns
   data_df <- data_df %>% dplyr::mutate(
-    submissionStatus_submittedOn = submissionStatus$submittedOn,
-    submissionStatus_state = submissionStatus$state,
+    submissionStatus_submittedOn = .data$submissionStatus$submittedOn,
+    submissionStatus_state = .data$submissionStatus$state,
     submissionStatus = NULL
   )
   # Change list columns to character columns

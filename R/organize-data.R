@@ -15,6 +15,7 @@
 #'   given by `download_all_and_get_table()`, which has a
 #'   "variables" column and a column for each submission
 #'   with the form_data_id as the column name.
+#' @importFrom rlang .data
 #' @examples
 #' data <- tibble::tribble(
 #'   ~variables, ~sub1, ~sub2,
@@ -35,7 +36,7 @@ make_tidier_table <- function(data) {
   )
   data <- tidyr::separate(
     data,
-    variables,
+    .data$variables,
     into = c("section", "variable"),
     sep = "[.]",
     remove = TRUE,
