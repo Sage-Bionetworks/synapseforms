@@ -47,7 +47,7 @@ test_that("get_main_sections returns correct sections", {
 
 test_that("get_submission_ids returns correct names", {
   res1 <- get_submission_ids(data)
-  res2 <- get_submission_ids(data[1:14,])
+  res2 <- get_submission_ids(data[1:14, ])
   expect_equal(res1, c("sub1", "sub2", "sub3", "sub4"))
   expect_equal(res2, c("sub1", "sub2"))
 })

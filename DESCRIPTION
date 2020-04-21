@@ -10,6 +10,9 @@ Authors@R:
              role = "cph"))
 Description: The synapseforms packages gathers submission metadata
   from Synapse, downloads the submission forms, and creates a report.
+URL: https://github.com/Sage-Bionetworks/synapseforms
+Depends:
+  R (>= 3.4)
 Imports:
   curl,
   dplyr,
@@ -24,7 +27,8 @@ Suggests:
   devtools,
   lintr,
   styler,
-  testthat
+  testthat,
+  covr
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

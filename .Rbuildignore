@@ -3,3 +3,5 @@
 ^LICENSE\.md$
 ^renv$
 ^renv\.lock$
+^\.github$
+^codecov\.yml$
