@@ -4,6 +4,7 @@
 #' listed in ACL as administrator. See
 #' \href{https://docs.synapse.org/rest/POST/form/group.html}{Synapse REST API}. # nolint
 #'
+#' @export
 #' @inheritParams download_all_and_get_table
 #' @param name Group name, between 3 and 256 characters,
 #'   that is globally unique. If a group with the same name exists
@@ -25,6 +26,7 @@ create_new_form_group <- function(syn, name) {
 #' Get the Access Control List for a FormGroup.
 #' See \href{https://docs.synapse.org/rest/POST/form/group/id/acl.html}{Synapse REST API}. # nolint
 #'
+#' @export
 #' @inheritParams create_new_form_group
 #' @param group The FormGroup id number.
 #' @return The Access Control List (ACL) as a list.
@@ -41,6 +43,7 @@ get_group_acl <- function(syn, group) {
 #' See \href{https://docs.synapse.org/rest/PUT/form/group/id/acl.html}{Synapse REST API}. # nolint
 #' WARNING: Ensure ACL is formatted correctly.
 #'
+#' @export
 #' @inheritParams get_group_acl
 #' @param access_control_list The access control list (ACL) in JSON form.
 update_group_acl <- function(syn, group, access_control_list) {
