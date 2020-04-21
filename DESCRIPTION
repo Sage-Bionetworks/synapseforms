@@ -14,15 +14,16 @@ URL: https://github.com/Sage-Bionetworks/synapseforms
 Depends:
   R (>= 3.4)
 Imports:
-  curl,
-  dplyr,
-  fs,
-  glue,
-  jsonlite,
-  purrr,
-  reticulate,
-  tibble,
-  tidyr
+    curl,
+    dplyr,
+    fs,
+    glue,
+    jsonlite,
+    purrr,
+    reticulate,
+    tibble,
+    tidyr,
+    magrittr
 Suggests:
   devtools,
   lintr,

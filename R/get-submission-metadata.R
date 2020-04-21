@@ -67,6 +67,7 @@ get_submissions_metadata <- function(syn, group, all_users = TRUE,
 #'
 #' @keywords internal
 #' @param data The json submission metadata.
+#' @importFrom magrittr %>%
 get_json_as_df <- function(data) {
   # Write to tempfile because the data is not a json string or txt,
   # which is what jsonlite wants; this solves the problem.
