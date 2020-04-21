@@ -21,6 +21,7 @@ Imports:
     jsonlite,
     purrr,
     reticulate,
+    rlang,
     tibble,
     tidyr,
     magrittr
