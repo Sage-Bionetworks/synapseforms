@@ -1,4 +1,7 @@
 # synapseforms
+
+![R-CMD-check](https://github.com/Sage-Bionetworks/synapseforms/workflows/R-CMD-check/badge.svg?branch=master)
+
 Wrappers for the [Synapse Forms Services API](https://docs.synapse.org/rest/#org.sagebionetworks.repo.web.controller.FormController).
 
 ## Requirements
