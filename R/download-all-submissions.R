@@ -9,7 +9,7 @@
 download_all_submissions_local <- function(syn, group, output_dir,
                                            state_filter = "SUBMITTED_WAITING_FOR_REVIEW") { # nolint
   subs_meta <- get_submissions_metadata(
-    syn,
+    syn = syn,
     group = group,
     all_users = TRUE,
     state_filter = state_filter
@@ -19,7 +19,7 @@ download_all_submissions_local <- function(syn, group, output_dir,
     subs_meta$dataFileHandleId,
     subs_meta$formDataId,
     function(handle, id) {
-      get_ps_url(syn, handle, id)
+      get_ps_url(syn = syn, file_handle_id = handle, form_data_id = id)
     }
   )
   # Download all files
@@ -27,7 +27,7 @@ download_all_submissions_local <- function(syn, group, output_dir,
     ps_url_list,
     subs_meta$name,
     function(url, name) {
-      download_form_file(url, name, output_dir = output_dir)
+      download_form_file(ps_url = url, name = name, output_dir = output_dir)
     }
   )
 }
@@ -45,7 +45,7 @@ download_all_submissions_local <- function(syn, group, output_dir,
 download_all_submissions_temp <- function(syn, group,
                                           state_filter = "SUBMITTED_WAITING_FOR_REVIEW") { # nolint
   subs_meta <- get_submissions_metadata(
-    syn,
+    syn = syn,
     group = group,
     all_users = TRUE,
     state_filter = state_filter
@@ -55,7 +55,7 @@ download_all_submissions_temp <- function(syn, group,
     subs_meta$dataFileHandleId,
     subs_meta$formDataId,
     function(handle, id) {
-      get_form_temp(syn, handle, id)
+      get_ps_url(syn = syn, file_handle_id = handle, form_data_id = id)
     }
   )
   unlist(file_list)

@@ -43,11 +43,15 @@ download_form_file <- function(ps_url, name, output_dir = NULL) {
 #' @inheritParams get_ps_url
 #' @return The name of the temporary file.
 get_form_temp <- function(syn, file_handle_id, form_data_id) {
-  ps_url <- get_ps_url(syn, file_handle_id, form_data_id)
+  ps_url <- get_ps_url(
+    syn = syn,
+    file_handle_id = file_handle_id,
+    form_data_id = form_data_id
+  )
   filename <- tempfile(
     pattern = glue::glue("form_{file_handle_id}_data_{form_data_id}"),
     fileext = ".json"
   )
-  download_form_file(ps_url, name = filename)
+  download_form_file(ps_url = ps_url, name = filename)
   filename
 }
