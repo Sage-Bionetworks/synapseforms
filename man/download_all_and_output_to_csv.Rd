@@ -6,19 +6,19 @@
 \usage{
 download_all_and_output_to_csv(
   syn,
-  state_filter = "SUBMITTED_WAITING_FOR_REVIEW",
   group,
-  output_dir
+  output_dir,
+  state_filter = "SUBMITTED_WAITING_FOR_REVIEW"
 )
 }
 \arguments{
 \item{syn}{Synapse login object}
 
-\item{state_filter}{The filter that is desired to gather submissions by.}
-
 \item{group}{The groupID.}
 
 \item{output_dir}{The directory to output the submissions and csv file to.}
+
+\item{state_filter}{The filter that is desired to gather submissions by.}
 }
 \description{
 Download all submissions, process into a single table, and output

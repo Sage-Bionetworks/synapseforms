@@ -47,7 +47,7 @@ get_submissions_metadata <- function(syn, group, all_users = TRUE,
   if (length(response$page) == 0) {
     return(NULL)
   }
-  metadata <- get_json_as_df(response$page)
+  metadata <- get_json_as_df(data = response$page)
 
   while (length(response) == 2) {
     body <- glue::glue('{{"filterByState":["{state_filter}"],"groupId":"{group}","nextPageToken":"{response$nextPageToken}"}}') # nolint
@@ -55,7 +55,7 @@ get_submissions_metadata <- function(syn, group, all_users = TRUE,
       uri = uri,
       body = body
     )
-    temp_metadata <- get_json_as_df(response$page)
+    temp_metadata <- get_json_as_df(data = response$page)
     metadata <- rbind(metadata, temp_metadata)
   }
   metadata

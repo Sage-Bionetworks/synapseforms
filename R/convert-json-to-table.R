@@ -31,7 +31,7 @@ convert_all_forms_to_table <- function(file_list = NULL, directory = NULL) {
     sub_tables <- purrr::map(
       file_list,
       function(file) {
-        get_json_unlisted_table(file)
+        get_json_unlisted_table(filepath = file)
       }
     )
   } else {
@@ -39,7 +39,7 @@ convert_all_forms_to_table <- function(file_list = NULL, directory = NULL) {
       file_list,
       names(file_list),
       function(file, name) {
-        get_json_unlisted_table(file, name)
+        get_json_unlisted_table(filepath = file, name = name)
       }
     )
   }
