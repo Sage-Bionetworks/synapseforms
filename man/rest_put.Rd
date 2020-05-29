@@ -4,14 +4,15 @@
 \alias{rest_put}
 \title{restPUT wrapper}
 \usage{
-rest_put(syn, uri, body)
+rest_put(syn, uri, body = NULL)
 }
 \arguments{
 \item{syn}{Synapse login object}
 
 \item{uri}{The uri for the API call}
 
-\item{body}{The body for the API call}
+\item{body}{The body for the API call. Default is NULL since not all restPUT
+API calls require a body.}
 }
 \description{
 Wrapper for the Synapse restPUT API call.

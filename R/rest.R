@@ -15,9 +15,14 @@ rest_get <- function(syn, uri) {
 #'
 #' @export
 #' @inheritParams rest_get
-#' @param body The body for the API call
-rest_put <- function(syn, uri, body) {
-  syn$restPUT(uri = uri, body = body)
+#' @param body The body for the API call. Default is NULL since not all restPUT
+#' API calls require a body.
+rest_put <- function(syn, uri, body = NULL) {
+  if (is.null(body)) {
+    syn$restPUT(uri = uri)
+  } else {
+    syn$restPUT(uri = uri, body = body)
+  }
 }
 
 #' restPOST wrapper
@@ -26,8 +31,13 @@ rest_put <- function(syn, uri, body) {
 #'
 #' @export
 #' @inheritParams rest_put
-rest_post <- function(syn, uri, body) {
-  syn$restPOST(uri = uri, body = body)
+rest_post <- function(syn, uri, body = NULL) {
+  if (is.null(body)) {
+    # synapseclient requires a body for all restPOST calls, even if API doesn't
+    syn$restPOST(uri = uri, body = "")
+  } else {
+    syn$restPOST(uri = uri, body = body)
+  }
 }
 
 #' restDELETE wrapper
