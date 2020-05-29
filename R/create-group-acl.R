@@ -14,7 +14,7 @@
 #'   name, createdBy, and createdOn.
 create_new_form_group <- function(syn, name) {
   body <- glue::glue('{{"name":"{name}"}}')
-  uri <- glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/group?name={name}") # nolint
+  uri <- glue::glue("/form/group?name={name}")
   group_response <- rest_post(syn = syn, uri = uri, body = body)
   group_response
 }
@@ -29,7 +29,7 @@ create_new_form_group <- function(syn, name) {
 #' @param group The FormGroup id number.
 #' @return The Access Control List (ACL) as a list.
 get_group_acl <- function(syn, group) {
-  uri <- glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/group/{group}/acl") # nolint
+  uri <- glue::glue("/form/group/{group}/acl")
   acl <- rest_get(syn = syn, uri = uri)
   acl
 }
@@ -44,7 +44,7 @@ get_group_acl <- function(syn, group) {
 #' @inheritParams get_group_acl
 #' @param access_control_list The access control list (ACL) in JSON form.
 update_group_acl <- function(syn, group, access_control_list) {
-  uri <- glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/group/{group}/acl") # nolint
+  uri <- glue::glue("/form/group/{group}/acl")
   acl <- rest_put(syn = syn, uri = uri, body = access_control_list)
   acl
 }

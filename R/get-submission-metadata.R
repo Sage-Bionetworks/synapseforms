@@ -35,9 +35,9 @@
 #' }
 get_submissions_metadata <- function(syn, group, all_users = TRUE,
                                      state_filter = "SUBMITTED_WAITING_FOR_REVIEW") { # nolint
-  uri <- "https://repo-prod.prod.sagebase.org/repo/v1/form/data/list/reviewer"
+  uri <- "/form/data/list/reviewer"
   if (!all_users) {
-    uri <- "https://repo-prod.prod.sagebase.org/repo/v1/form/data/list"
+    uri <- "/form/data/list"
   }
   body <- glue::glue('{{"filterByState":["{state_filter}"],"groupId":"{group}"}}') # nolint
   response <- rest_post(syn = syn, uri = uri, body = body)
