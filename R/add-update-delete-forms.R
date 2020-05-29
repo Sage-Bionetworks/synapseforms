@@ -50,10 +50,7 @@ update_form <- function(syn, form_data_id, file_handle_id, form_name = NULL) {
 #' @param form_data_id The formDataId for the form.
 submit_form_for_review <- function(syn, form_data_id) {
   uri <- glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}/submit") # nolint
-  # The rest call does not require a body, but the synapseclient does; send
-  # an empty string
-  body <- ""
-  form <- rest_post(syn = syn, uri = uri, body = body)
+  form <- rest_post(syn = syn, uri = uri)
   form
 }
 
