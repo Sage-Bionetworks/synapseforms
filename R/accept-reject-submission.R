@@ -23,7 +23,7 @@
 reject_submission <- function(syn, form_data_id, reason) {
   if (nchar(reason) <= 500) {
     body <- glue::glue('{{"reason":"{reason}"}}')
-    uri <- glue::glue("/form/data/{form_data_id}/reject")
+    uri <- glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}/reject") # nolint
     reject_response <- rest_put(syn = syn, uri = uri, body = body)
     reject_response
   } else {
@@ -50,7 +50,7 @@ reject_submission <- function(syn, form_data_id, reason) {
 #' @return The response from the acceptance call as a list containing
 #'   the submission metadata.
 accept_submission <- function(syn, form_data_id) {
-  uri <- glue::glue("/form/data/{form_data_id}/accept")
+  uri <- glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}/accept") # nolint
   accept_response <- rest_put(syn = syn, uri = uri)
   accept_response
 }
