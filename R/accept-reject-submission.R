@@ -23,10 +23,8 @@
 reject_submission <- function(syn, form_data_id, reason) {
   if (nchar(reason) <= 500) {
     body <- glue::glue('{{"reason":"{reason}"}}')
-    reject_response <- syn$restPUT(
-      uri = glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}/reject"), # nolint
-      body = body
-    )
+    uri <- glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}/reject") # nolint
+    reject_response <- rest_put(syn = syn, uri = uri, body = body)
     reject_response
   } else {
     stop("The rejection reason is limited to 500 characters")
@@ -52,8 +50,7 @@ reject_submission <- function(syn, form_data_id, reason) {
 #' @return The response from the acceptance call as a list containing
 #'   the submission metadata.
 accept_submission <- function(syn, form_data_id) {
-  accept_response <- syn$restPUT(
-    uri = glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}/accept") # nolint
-  )
+  uri <- glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}/accept") # nolint
+  accept_response <- rest_put(syn = syn, uri = uri)
   accept_response
 }

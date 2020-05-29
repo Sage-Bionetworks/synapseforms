@@ -6,7 +6,8 @@
 #' @return The presigned URL.
 get_ps_url <- function(syn, file_handle_id, form_data_id) {
   body <- glue::glue('{{"requestedFiles": [{{"fileHandleId": "{file_handle_id}", "associateObjectId": "{form_data_id}", "associateObjectType": "FormData"}}], "includePreSignedURLs": true,"includeFileHandles": false}}') # nolint
-  file_url <- syn$restPOST(
+  file_url <- rest_post(
+    syn = syn,
     uri = "https://repo-prod.prod.sagebase.org/file/v1/fileHandle/batch",
     body = body
   )

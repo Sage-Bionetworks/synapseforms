@@ -40,10 +40,7 @@ get_submissions_metadata <- function(syn, group, all_users = TRUE,
     uri <- "https://repo-prod.prod.sagebase.org/repo/v1/form/data/list"
   }
   body <- glue::glue('{{"filterByState":["{state_filter}"],"groupId":"{group}"}}') # nolint
-  response <- syn$restPOST(
-    uri = uri,
-    body = body
-  )
+  response <- rest_post(syn = syn, uri = uri, body = body)
   if (length(response$page) == 0) {
     return(NULL)
   }
@@ -51,10 +48,7 @@ get_submissions_metadata <- function(syn, group, all_users = TRUE,
 
   while (length(response) == 2) {
     body <- glue::glue('{{"filterByState":["{state_filter}"],"groupId":"{group}","nextPageToken":"{response$nextPageToken}"}}') # nolint
-    response <- syn$restPOST(
-      uri = uri,
-      body = body
-    )
+    response <- rest_post(syn = syn, uri = uri, body = body)
     temp_metadata <- get_json_as_df(data = response$page)
     metadata <- rbind(metadata, temp_metadata)
   }
