@@ -11,10 +11,8 @@
 #'   data.
 add_new_form <- function(syn, group, file_handle_id, form_name) {
   body <- glue::glue('{{"name":"{form_name}","fileHandleId":"{file_handle_id}"}}') # nolint
-  form <- syn$restPOST(
-    uri = glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data?groupId={group}"), # nolint
-    body = body
-  )
+  uri <- glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data?groupId={group}") # nolint
+  form <- rest_post(syn = syn, uri = uri, body = body)
   form
 }
 
@@ -30,14 +28,12 @@ add_new_form <- function(syn, group, file_handle_id, form_name) {
 #' @inheritParams add_new_form
 #' @inheritParams submit_form_for_review
 update_form <- function(syn, form_data_id, file_handle_id, form_name = NULL) {
+  uri <- glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}") # nolint
   body <- glue::glue('{{"fileHandleId":"{file_handle_id}"}}') # nolint
   if (!is.null(form_name)) {
     body <- glue::glue('{{"name":"{form_name}","fileHandleId":"{file_handle_id}"}}') # nolint
   }
-  form <- syn$restPUT(
-    uri = glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}"), # nolint
-    body = body
-  )
+  form <- rest_put(syn = syn, uri = uri, body = body)
   form
 }
 
@@ -53,10 +49,11 @@ update_form <- function(syn, form_data_id, file_handle_id, form_name = NULL) {
 #' @inheritParams get_submissions_metadata
 #' @param form_data_id The formDataId for the form.
 submit_form_for_review <- function(syn, form_data_id) {
-  form <- syn$restPOST(
-    uri = glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}/submit"), # nolint
-    body = "" # synapseclient requires body here, but API does not
-  )
+  uri <- glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}/submit") # nolint
+  # The rest call does not require a body, but the synapseclient does; send
+  # an empty string
+  body <- ""
+  form <- rest_post(syn = syn, uri = uri, body = body)
   form
 }
 
@@ -70,7 +67,6 @@ submit_form_for_review <- function(syn, form_data_id) {
 #' @inheritParams submit_form_for_review
 #' @return None
 delete_form <- function(syn, form_data_id) {
-  syn$restDELETE(
-    uri = glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}") # nolint
-  )
+  uri <- glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}") # nolint
+  rest_delete(syn = syn, uri = uri)
 }
