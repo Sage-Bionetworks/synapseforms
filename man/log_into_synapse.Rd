@@ -4,11 +4,16 @@
 \alias{log_into_synapse}
 \title{Log into Synapse}
 \usage{
-log_into_synapse()
+log_into_synapse(username = NULL, password = NULL)
+}
+\arguments{
+\item{username}{Your username}
+
+\item{password}{Your password}
 }
 \value{
 Synapse login object from
 }
 \description{
-Log into Synapse. Assumes credentials are stored.
+Log into Synapse.
 }

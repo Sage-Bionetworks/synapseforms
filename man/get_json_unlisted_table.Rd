@@ -2,7 +2,8 @@
 % Please edit documentation in R/convert-json-to-table.R
 \name{get_json_unlisted_table}
 \alias{get_json_unlisted_table}
-\title{Get data from JSON file}
+\title{To
+Get data from JSON file}
 \usage{
 get_json_unlisted_table(filepath, name = NULL)
 }
