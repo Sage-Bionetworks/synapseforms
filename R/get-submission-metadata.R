@@ -6,9 +6,10 @@
 #'
 #' @export
 #' @param syn Synapse login object
-#' @param state_filter The filter that is desired to gather submissions by.
-#'   Filters are: `WAITING_FOR_SUBMISSION`, `SUBMITTED_WAITING_FOR_REVIEW`,
-#'   `ACCEPTED`, `REJECTED`. Only accepts one filter.
+#' @param state_filter The submission state of the submissions.
+#' Pass a list of submission states to match on any state in the list.
+#' Submission states are: `WAITING_FOR_SUBMISSION`, `SUBMITTED_WAITING_FOR_REVIEW`,
+#' `ACCEPTED`, `REJECTED`. Set to NULL (default) to ignore submission state.
 #' @param group The groupID.
 #' @param all_users TRUE to get all submissions in group; FALSE to get
 #'   group submissions from caller only.
@@ -39,9 +40,12 @@ get_submissions_metadata <- function(syn, group, all_users = TRUE,
   if (!all_users) {
     uri <- "https://repo-prod.prod.sagebase.org/repo/v1/form/data/list"
   }
+  if (is.null(state_filter)) {
+    state_filter <- c("WAITING_FOR_SUBMISSION", "SUBMITTED_WAITING_FOR_REVIEW",
+                      "ACCEPTED", "REJECTED")
+  }
   state_filter_str <- paste(state_filter, collapse = "\",\"")
   query_string <- '{{"filterByState":["{state_filter_str}"],"groupId":"{group}"}}' # nolint
-  print(glue::glue(query_string))
   body <- glue::glue(query_string)
   response <- syn$restPOST(
     uri = uri,
