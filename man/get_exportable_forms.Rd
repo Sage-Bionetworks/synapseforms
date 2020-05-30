@@ -8,6 +8,7 @@ get_exportable_forms(
   syn,
   form_group_id,
   file_view_reference,
+  submission_state = "ACCEPTED",
   time_duration = Inf,
   form_event = "submit",
   as_reviewer = TRUE
@@ -19,7 +20,7 @@ get_exportable_forms(
 \item{form_group_id}{The form group to check for the form event.}
 
 \item{file_view_reference}{Synapse file view to query to check if form has
-already been exported.}
+already been exported. If NULL, this function behaves likes `get_recent_forms`}
 
 \item{time_duration}{The time period (as an integer in seconds or a string
 representation parseable by lubridate::duration) to consider a

@@ -2,29 +2,32 @@
 % Please edit documentation in R/forms-to-synapse.R
 \name{export_forms_to_synapse}
 \alias{export_forms_to_synapse}
-\title{Retrieve forms from a FormGroup and append to a Synapse Table}
+\title{Retrieve forms from a FormGroup and export as YAML to Synapse.}
 \usage{
 export_forms_to_synapse(
   syn,
   form_group_id,
-  output = NULL,
-  submission_state = "ACCEPTED"
+  output,
+  file_view_reference = NULL,
+  submission_state = "ACCEPTED",
+  form_data_id = NULL,
+  ...
 )
 }
 \arguments{
 \item{syn}{A Synapse object (see `log_into_synapse`).}
 
-\item{form_group_id}{The `groupId` of the FormGroup}
+\item{form_group_id}{The `groupId` of the FormGroup.}
 
-\item{output}{The Synapse ID of either the table to append the contents of
-the retrieved FormData to (if such a table has already been created) or the
-Synapse ID of the project to instantiate such a table and append the
-retrieved FormData to.}
+\item{output}{The Synapse ID of the parent folder to export the forms to.}
 
 \item{submission_state}{Only retrieve FormData with this specific
 state. Set to `NULL` to ignore state when retrieving FormData.}
+
+\item{form_data_id}{A vector of specific forms to export.}
+
+\item{...}{additional arguments to pass to `get_exportable_forms`.}
 }
 \description{
-Appends newly submitted FormData to a Synapse Table. The contents of
-the FormData object must be a valid JSON blob.
+Retrieve forms from a FormGroup and export as YAML to Synapse.
 }

@@ -9,7 +9,8 @@ get_recent_forms(
   form_group_id,
   time_duration,
   form_event = "create",
-  as_reviewer = TRUE
+  as_reviewer = TRUE,
+  submission_state = NULL
 )
 }
 \arguments{
@@ -22,13 +23,19 @@ representation parseable by lubridate::duration) to consider a
 form event "recent".}
 
 \item{form_event}{The form event to check for. Possible values are
-"create" or "submit". "create" will consider when the form was added
-to the form group whereas "submit" will consider when the form was submitted.
-Has no effect if time_duration is Inf.}
+"create", "submit", or "review". "create" will consider when the form was added
+to the form group, "submit" will consider when the form was submitted, and
+"review" will consider when the form was reviewed. Has no effect if
+time_duration is Inf.}
 
 \item{as_reviewer}{Request forms using the /form/data/list/reviewer endpoint.
 If False, request forms using the /form/data/list endpoint. See the Synapse
 REST docs for additional information.}
+
+\item{submission_state}{The submission state of the submissions.
+Pass a list of submission states to match on any state in the list.
+Submission states are: `WAITING_FOR_SUBMISSION`, `SUBMITTED_WAITING_FOR_REVIEW`,
+`ACCEPTED`, `REJECTED`. Set to NULL (default) to ignore submission state.}
 }
 \value{
 A dataframe where each record is a recent form.

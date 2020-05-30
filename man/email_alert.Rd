@@ -12,7 +12,7 @@ email_alert(
   time_duration = 60,
   file_view_reference = NULL,
   as_reviewer = TRUE,
-  export_to_synapse = TRUE
+  submission_state = NULL
 )
 }
 \arguments{
