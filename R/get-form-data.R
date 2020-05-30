@@ -1,38 +1,45 @@
 #' Get the presigned url for downloading the submission file.
 #'
 #' @param syn Synapse login object
-#' @param file_handle_id The fileHandleId for the submission.
-#' @param form_data_id The formDataId for the submission.
-#' @return The presigned URL.
+#' @param file_handle_id The fileHandleId(s) for the submission(s).
+#' @param form_data_id The formDataId(s) for the submission(s).
+#' @return The presigned URL(s).
 get_ps_url <- function(syn, file_handle_id, form_data_id) {
-  body <- glue::glue('{{"requestedFiles": [{{"fileHandleId": "{file_handle_id}", "associateObjectId": "{form_data_id}", "associateObjectType": "FormData"}}], "includePreSignedURLs": true,"includeFileHandles": false}}') # nolint
-  file_url <- rest_post(
-    syn = syn,
+  # build the JSON object to feed to the REST call
+  requested_files <- purrr::map2(file_handle_id, form_data_id,
+    function(handle, form_id) {
+       glue::glue('{{"fileHandleId":"{handle}",',
+                  '"associateObjectId":"{form_id}",',
+                  '"associateObjectType":"FormData"}}')
+    }) %>%
+    paste(collapse = ",")
+  body <- glue::glue('{{"requestedFiles":[{requested_files}],',
+                       '"includePreSignedURLs": true,',
+                       '"includeFileHandles": false}}') # nolint
+  response <- syn$restPOST(
     uri = "https://repo-prod.prod.sagebase.org/file/v1/fileHandle/batch",
     body = body
   )
-  file_url$requestedFiles[[1]]$preSignedURL
+  presigned_urls <- purrr::map(response[[1]], ~ .$preSignedURL) %>%
+    purrr::as_vector() # retain return type of previous implementation
+  return(presigned_urls)
 }
 
 #' Download the submission file
 #'
-#' Downloads the submission file locally. Can specify
-#' the directory to download to, or else the `name` parameter
-#' will assume the path is included.
+#' Downloads the submission file locally.
 #'
-#' @param ps_url The presigned URL for the submission.
-#' @param name The name, with extension, of the submission file.
-#'   If the `output_dir` is not specified, then `name` should be
-#'   full path.
+#' @param ps_url The presigned URL(s) for the submission.
+#' @param name The basename of the submission file.
 #' @param output_dir The directory to download the submission to.
-#'   If `NULL`, will assume full path included in `name`; else will
-#'   prepend `output_dir` to `name`.
-download_form_file <- function(ps_url, name, output_dir = NULL) {
-  if (is.null(output_dir)) {
-    curl::curl_download(ps_url, destfile = name)
-  } else {
-    curl::curl_download(ps_url, destfile = fs::path(output_dir, name))
-  }
+#' By default the output directory is the working directory.
+download_form_file <- function(ps_url, name, output_dir = ".") {
+  output_dir <- normalizePath(output_dir)
+  form_files <- purrr::map2(ps_url, name, function(url, basename) {
+    curl::curl_download(url, destfile = fs::path(output_dir, basename))
+  }) %>%
+    purrr::as_vector() # retain return type of previous implementation
+  return(form_files)
 }
 
 #' Download submission to temp file
