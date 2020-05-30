@@ -1,23 +1,31 @@
-#' Retrieve forms from a FormGroup and append to a Synapse Table
-#'
-#' Appends newly submitted FormData to a Synapse Table. The contents of
-#' the FormData object must be a valid JSON blob.
+#' Retrieve forms from a FormGroup and export as YAML to Synapse.
 #'
 #' @param syn A Synapse object (see `log_into_synapse`).
-#' @param form_group_id The `groupId` of the FormGroup
-#' @param output The Synapse ID of either the table to append the contents of
-#' the retrieved FormData to (if such a table has already been created) or the
-#' Synapse ID of the project to instantiate such a table and append the
-#' retrieved FormData to.
+#' @param form_group_id The `groupId` of the FormGroup.
+#' @param output The Synapse ID of the parent folder to export the forms to.
 #' @param submission_state Only retrieve FormData with this specific
 #' state. Set to `NULL` to ignore state when retrieving FormData.
+#' @param form_data_id A vector of specific forms to export.
+#' @param ... additional arguments to pass to `get_exportable_forms`.
 #' @export
-export_forms_to_synapse <- function(syn, form_group_id, output = NULL,
-                             submission_state = "ACCEPTED") {
+export_forms_to_synapse <- function(syn, form_group_id, output,
+                                    file_view_reference = NULL,
+                                    submission_state = "ACCEPTED",
+                                    form_data_id = NULL, ...) {
+  exportable_forms <- get_exportable_forms(syn = syn,
+                                           form_group_id = form_group_id,
+                                           file_view_reference = file_view_reference,
+                                           submission_state = submission_state,
+                                           ...)
+  if (!is.null(form_data_id)) {
+    exportable_forms <- exportable_forms %>%
+      filter(formDataId %in% form_data_id)
+  }
+  # TODO download all exportable forms, export to Synapse as YAML, and annotate with properties
   return()
 }
 
-get_form <- function(syn, form, as_list = TRUE) {
+get_form <- function(syn, form_data_id, data_file_handle_id) {
   fpath <- synapseforms:::get_form_temp(
     syn, form$dataFileHandleId, form$formDataId)
   if (as_list) {
@@ -51,7 +59,7 @@ get_form <- function(syn, form, as_list = TRUE) {
 #' @export
 email_alert <- function(syn, recipients, form_group_id, form_event = "submit",
                         time_duration = 60, file_view_reference = NULL,
-                        as_reviewer = TRUE, export_to_synapse = TRUE) {
+                        as_reviewer = TRUE, submission_state = NULL) {
   validate_form_event_params(time_duration = time_duration,
                              form_event = form_event)
   exportable_forms <- get_exportable_forms(syn = syn,
@@ -59,12 +67,11 @@ email_alert <- function(syn, recipients, form_group_id, form_event = "submit",
                                            form_event = form_event,
                                            time_duration = time_duration,
                                            file_view_reference = file_view_reference,
-                                           as_reviewer = as_reviewer)
-  if (export_to_synapse) {
-    exported_forms <- export_forms_to_synapse(syn = syn)
-  }
+                                           as_reviewer = as_reviewer,
+                                           submission_state = submission_state)
 
 }
+
 
 #' Check for recent form events and return those forms
 #'
@@ -81,40 +88,49 @@ email_alert <- function(syn, recipients, form_group_id, form_event = "submit",
 #' representation parseable by lubridate::duration) to consider a
 #' form event "recent".
 #' @param form_event The form event to check for. Possible values are
-#' "create" or "submit". "create" will consider when the form was added
-#' to the form group whereas "submit" will consider when the form was submitted.
-#' Has no effect if time_duration is Inf.
+#' "create", "submit", or "review". "create" will consider when the form was added
+#' to the form group, "submit" will consider when the form was submitted, and
+#' "review" will consider when the form was reviewed. Has no effect if
+#' time_duration is Inf.
 #' @param as_reviewer Request forms using the /form/data/list/reviewer endpoint.
 #' If False, request forms using the /form/data/list endpoint. See the Synapse
 #' REST docs for additional information.
+#' @param submission_state The submission state of the submissions.
+#' Pass a list of submission states to match on any state in the list.
+#' Submission states are: `WAITING_FOR_SUBMISSION`, `SUBMITTED_WAITING_FOR_REVIEW`,
+#' `ACCEPTED`, `REJECTED`. Set to NULL (default) to ignore submission state.
 #' @return A dataframe where each record is a recent form.
 #' @export
 get_recent_forms <- function(syn, form_group_id, time_duration,
-                             form_event = "create", as_reviewer = TRUE) {
+                             form_event = "create", as_reviewer = TRUE,
+                             submission_state = NULL) {
   current_time <- lubridate::now(tzone = "UTC")
   validate_form_event_params(time_duration = time_duration,
                              form_event = form_event)
+  # Properly configure submission_state
+  if (as_reviewer && "WAITING_FOR_SUBMISSION" %in% submission_state) {
+    submission_state <- submission_state[
+      !(submission_state == "SUBMITTED_WAITING_FOR_REVIEW")]
+    warning("Fetching forms as reviewer. Only submitted forms will be fetched.")
+  } else if (!as_reviewer) {
+    warning(paste("Not fetching forms as a reviewer.",
+                  "Only forms owned by the current user will be fetched."))
+  }
   time_duration <- lubridate::duration(time_duration)
-  if (form_event == "create" && as_reviewer) {
-    warning("Fetching forms as reviewer. Only submitted forms will be considered.")
-  }
-  if (form_event == "submit" || as_reviewer) {
-    state_filter <- "SUBMITTED_WAITING_FOR_REVIEW"
-  } else if (form_event == "create") {
-    state_filter <- c("WAITING_FOR_SUBMISSION", "SUBMITTED_WAITING_FOR_REVIEW")
-  }
+  # Set column containing timestamp of event
   if (form_event == "submit") {
     timestamp_col <- rlang::sym("submissionStatus_submittedOn")
   } else if (form_event == "create") {
     timestamp_col <- rlang::sym("createdOn")
+  } else if (form_event == "review") {
+    timestamp_col <- rlang::sym("submissionStatus_reviewedOn")
   }
   all_forms <- get_submissions_metadata(syn,
                                         group = form_group_id,
-                                        state_filter = state_filter,
+                                        state_filter = submission_state,
                                         all_users = as_reviewer)
   if (!(rlang::as_string(timestamp_col) %in% names(all_forms))) {
-    # this should only happen if no forms have been submitted and form_event
-    # is "submit"
+    # this will occurr if no forms satisfy the form event
     return(all_forms[0,]) # empty dataframe but retain column names
   }
   recent_forms <- all_forms %>%
@@ -129,7 +145,7 @@ get_recent_forms <- function(syn, form_group_id, time_duration,
 #' @param syn A Synapse object (see `log_into_synapse`).
 #' @param form_group_id The form group to check for the form event.
 #' @param file_view_reference Synapse file view to query to check if form has
-#' already been exported.
+#' already been exported. If NULL, this function behaves likes `get_recent_forms`
 #' @param time_duration The time period (as an integer in seconds or a string
 #' representation parseable by lubridate::duration) to consider a
 #' form event "recent". By default it is Inf -- all forms are fetched.
@@ -143,13 +159,14 @@ get_recent_forms <- function(syn, form_group_id, time_duration,
 #' @return A dataframe where each record is an exportable form.
 #' @export
 get_exportable_forms <- function(syn, form_group_id, file_view_reference,
-                                 time_duration = Inf, form_event = "submit",
-                                 as_reviewer = TRUE) {
+                                 submission_state = "ACCEPTED", time_duration = Inf,
+                                 form_event = "submit", as_reviewer = TRUE) {
   forms <- get_recent_forms(syn = syn,
                             form_group_id = form_group_id,
                             time_duration = time_duration,
                             form_event = form_event,
-                            as_reviewer = as_reviewer)
+                            as_reviewer = as_reviewer,
+                            submission_state = submission_state)
   if (is.null(file_view_reference)) {
     return(forms)
   }
@@ -170,17 +187,13 @@ get_exportable_forms <- function(syn, form_group_id, file_view_reference,
 #' to the form group whereas "submit" will trigger upon an existing form being
 #' submitted.
 validate_form_event_params <- function(time_duration, form_event) {
+  allowed_events <- c("create", "submit", "review")
   # Check time_duration for a valid value
   if (is.na(lubridate::duration(time_duration))) {
     stop(paste(time_duration, "of type", typeof(time_duration),
                "is not an allowed `time_duration` value."))
-  }
-  # Check form_event for allowed values
-  if (form_event == "submit") {
-    timestamp_col <- "submissionStatus_submittedOn"
-  } else if (form_event == "create") {
-    timestamp_col <- "create"
-  } else {
-    stop("`form_event` must be either \"submit\" or \"create\"")
+  } else if (!(form_event %in% allowed_events)) {
+    stop(paste("form_event must be one of",
+               paste(allowed_events, collapse = ", ")))
   }
 }
