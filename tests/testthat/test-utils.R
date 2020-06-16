@@ -11,6 +11,7 @@ test_that("is_positive_integer returns correct boolean", {
   expect_false(is_positive_integer("-2"))
   expect_false(is_positive_integer(FALSE))
   expect_false(is_positive_integer(TRUE))
+  expect_false(is_positive_integer(Inf))
   expect_true(is_positive_integer(42))
   expect_true(is_positive_integer("37"))
 })

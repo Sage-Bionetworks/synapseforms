@@ -31,7 +31,7 @@ log_into_synapse <- function() {
 #' positive integer; else `FALSE`
 is_positive_integer <- function(data) {
   numeric_data <- suppressWarnings(as.numeric(data))
-  if (is.na(data) || is.null(data) || is.na(numeric_data)) {
+  if (is.na(data) || is.null(data) || is.na(numeric_data) || data == Inf) {
     return(FALSE)
   }
   if (inherits(data, "numeric") && data > 0 && data %% 1 == 0 ||
