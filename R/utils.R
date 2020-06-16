@@ -34,8 +34,9 @@ is_positive_integer <- function(data) {
   if (is.na(data) || is.null(data) || is.na(numeric_data) || data == Inf) {
     return(FALSE)
   }
-  if (inherits(data, "numeric") && data > 0 && data %% 1 == 0 ||
-    inherits(data, "character") && numeric_data > 0 && numeric_data %% 1 == 0) {
+  if ((inherits(data, "numeric") || inherits(data, "character") ||
+       inherits(data, "integer")) &&
+      numeric_data > 0 && numeric_data %% 1 == 0) {
     return(TRUE)
   } else {
     return(FALSE)
