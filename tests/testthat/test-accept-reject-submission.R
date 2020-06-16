@@ -1,6 +1,9 @@
 context("accept-reject-submission.R")
 
 test_that("accept_submission makes the correct string", {
+  # Different return values does not matter; simply put in to check that
+  # mock was called twice and returned the expected values. Leaving as is
+  # for future reference on how mocking works.
   m <- mock(TRUE, FALSE)
   stub(accept_submission, "rest_put", m)
   res1 <- accept_submission(syn = "", form_data_id = 1)
@@ -15,7 +18,8 @@ test_that("accept_submission makes the correct string", {
 
 test_that("accept_submission throws error if form_data_id is not Z+", {
   # Should not pass through to the rest_put function, but mocking to be safe
-  m <- mock(c(1:10))
+  # Return value does not matter. Have it cycle and return TRUE each time
+  m <- mock(TRUE, cycle = TRUE)
   stub(accept_submission, "rest_put", m)
   expect_error(accept_submission("", 0))
   expect_error(accept_submission("", "0"))
