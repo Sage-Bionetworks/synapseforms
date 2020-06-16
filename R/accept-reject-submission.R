@@ -50,6 +50,9 @@ reject_submission <- function(syn, form_data_id, reason) {
 #' @return The response from the acceptance call as a list containing
 #'   the submission metadata.
 accept_submission <- function(syn, form_data_id) {
+  if (!is_positive_integer(form_data_id)) {
+    stop("form_data_id must be a positive integer")
+  }
   uri <- glue::glue("https://repo-prod.prod.sagebase.org/repo/v1/form/data/{form_data_id}/accept") # nolint
   accept_response <- rest_put(syn = syn, uri = uri)
   accept_response

@@ -26,6 +26,7 @@ Imports:
   tidyr,
   magrittr
 Suggests:
+  mockery,
   testthat
 License: MIT + file LICENSE
 Encoding: UTF-8

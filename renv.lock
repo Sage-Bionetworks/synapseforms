@@ -163,6 +163,13 @@
       "Repository": "CRAN",
       "Hash": "dee1d97cffddfd3ed969e224bd0826d0"
     },
+    "mockery": {
+      "Package": "mockery",
+      "Version": "0.4.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "d36898c2cc4f8eef5748ec5e8181e5fb"
+    },
     "pillar": {
       "Package": "pillar",
       "Version": "1.4.2",

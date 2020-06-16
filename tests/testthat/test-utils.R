@@ -1,0 +1,18 @@
+context("utils.R")
+
+test_that("is_positive_integer returns correct boolean", {
+  expect_false(is_positive_integer(NULL))
+  expect_false(is_positive_integer(NA))
+  expect_false(is_positive_integer("foo"))
+  expect_false(is_positive_integer(23.4))
+  expect_false(is_positive_integer(0))
+  expect_false(is_positive_integer("0"))
+  expect_false(is_positive_integer(-2))
+  expect_false(is_positive_integer("-2"))
+  expect_false(is_positive_integer(FALSE))
+  expect_false(is_positive_integer(TRUE))
+  expect_false(is_positive_integer(Inf))
+  expect_true(is_positive_integer(42))
+  expect_true(is_positive_integer("37"))
+  expect_true(is_positive_integer(1L))
+})
