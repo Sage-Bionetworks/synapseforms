@@ -34,9 +34,14 @@ get_ps_url <- function(syn, file_handle_id, form_data_id) {
 #' @param output_dir The directory to download the submission to.
 #' By default the output directory is the working directory.
 download_form_file <- function(ps_url, name, output_dir = ".") {
-  output_dir <- normalizePath(output_dir)
-  form_files <- purrr::map2(ps_url, name, function(url, basename) {
-    curl::curl_download(url, destfile = fs::path(output_dir, basename))
+  output_dir <- unlist(purrr::map(output_dir, normalizePath))
+  pmap_args <- list(url = ps_url, basename = name, output_directory = output_dir)
+  form_files <- purrr::pmap(pmap_args, function(url, basename, output_directory) {
+    absolute_path <- fs::path(output_directory, basename)
+    if (!file.exists(absolute_path)) {
+      file.create(absolute_path)
+    }
+    curl::curl_download(url, destfile = absolute_path)
   }) %>%
     purrr::as_vector() # retain return type of previous implementation
   return(form_files)
@@ -56,10 +61,15 @@ get_form_temp <- function(syn, file_handle_id, form_data_id) {
     file_handle_id = file_handle_id,
     form_data_id = form_data_id
   )
-  filename <- tempfile(
-    pattern = glue::glue("form_{file_handle_id}_data_{form_data_id}"),
-    fileext = ".json"
+  filenames <- purrr::map2(file_handle_id, form_data_id, function(fhid, fdi) {
+    tempfile(pattern = glue::glue("form_{fhid}_data_{fdi}"), fileext = ".json")
+  })
+  basenames <- purrr::map(filenames, basename)
+  dirnames <- purrr::map(filenames, dirname)
+  downloaded_form_file <- download_form_file(
+    ps_url = ps_url,
+    name = unlist(basenames),
+    output_dir = unlist(dirnames)
   )
-  download_form_file(ps_url = ps_url, name = filename)
-  filename
+  return(downloaded_form_file)
 }

@@ -21,15 +21,30 @@ export_forms_to_synapse <- function(syn, form_group_id, output,
     exportable_forms <- exportable_forms %>%
       filter(formDataId %in% form_data_id)
   }
+  form_contents <- get_forms(
+    syn = syn,
+    data_file_handle_id = exportable_forms$dataFileHandleId,
+    form_data_id = exportable_forms$formDataId,
+    as_list=TRUE)
+  synapseclient <- reticulate::import("synapseclient") # needed to create File objects
+  form_file_handles <- purrr::map2(
+    form_contents, exportable_forms$formDataId, function(form, fdi) {
+    temp_f <- tempfile(pattern = glue::glue("form_{fdi}"), fileext = ".yaml")
+    yaml::write_yaml(form, temp_f)
+    syn_f <- synapseclient$File(temp_f, parent=output)
+    syn$store(path = temp_f, parent=file_view_reference)
+  })
   # TODO download all exportable forms, export to Synapse as YAML, and annotate with properties
   return()
 }
 
-get_form <- function(syn, form_data_id, data_file_handle_id) {
+#' Download a form's contents
+get_forms <- function(syn, form_data_id, data_file_handle_id, as_list=FALSE) {
   fpath <- synapseforms:::get_form_temp(
-    syn, form$dataFileHandleId, form$formDataId)
+    syn, file_handle_id = data_file_handle_id, form_data_id = form_data_id)
   if (as_list) {
-    return(jsonlite::read_json(fpath))
+    forms_as_lists <- purrr::map(fpath, jsonlite::read_json)
+    return(forms_as_lists)
   }
   return(fpath)
 }
@@ -37,12 +52,12 @@ get_form <- function(syn, form_data_id, data_file_handle_id) {
 #' Email a Synapse user/group in response to a form event
 #'
 #' @param syn A Synapse object (see `log_into_synapse`).
-#' @param recipients A vector of recipients to send an email alert to.
+#' @param recipients A vector of recipients (Synapse user IDs) to send
+#' an email alert to.
 #' @param form_group_id The form group to check for the form event.
 #' @param form_event The form event to check for. Possible values are
 #' "create" or "submit". "create" will consider when the form was added
 #' to the form group whereas "submit" will consider when the form was submitted.
-#' Has no effect if time_duration is Inf.
 #' @param time_duration The time period (as an integer in seconds or a string
 #' representation parseable by lubridate::duration) to consider a
 #' form event "recent" and hence requiring an email alert. This serves
@@ -51,8 +66,10 @@ get_form <- function(syn, form_data_id, data_file_handle_id) {
 #' and which are not. Secondly, if there is a file view specified but exporting
 #' the form data fails for some reason, this prevents the caller from repeatedly
 #' emailing a user/group past a certain time window (when used with a cron job).
+#' Set to Inf to fetch all qualifying events.
 #' @param file_view_reference Synapse file view to query to check if form has
-#' already been exported. If the form has already been exported there is no alert.
+#' already been exported. If the form has already been exported there is
+#' no email alert sent out.
 #' @param as_reviewer Request forms using the /form/data/list/reviewer endpoint.
 #' If FALSE, request forms using the /form/data/list endpoint. See the Synapse
 #' REST docs for additional information.
@@ -69,7 +86,7 @@ email_alert <- function(syn, recipients, form_group_id, form_event = "submit",
                                            file_view_reference = file_view_reference,
                                            as_reviewer = as_reviewer,
                                            submission_state = submission_state)
-
+  return(exportable_forms)
 }
 
 
@@ -86,12 +103,11 @@ email_alert <- function(syn, recipients, form_group_id, form_event = "submit",
 #' @param form_group_id The form group to check for the form event.
 #' @param time_duration The time period (as an integer in seconds or a string
 #' representation parseable by lubridate::duration) to consider a
-#' form event "recent".
+#' form event "recent". Set to Inf to fetch all qualifying events.
 #' @param form_event The form event to check for. Possible values are
 #' "create", "submit", or "review". "create" will consider when the form was added
 #' to the form group, "submit" will consider when the form was submitted, and
-#' "review" will consider when the form was reviewed. Has no effect if
-#' time_duration is Inf.
+#' "review" will consider when the form was reviewed.
 #' @param as_reviewer Request forms using the /form/data/list/reviewer endpoint.
 #' If False, request forms using the /form/data/list endpoint. See the Synapse
 #' REST docs for additional information.

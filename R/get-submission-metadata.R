@@ -41,8 +41,12 @@ get_submissions_metadata <- function(syn, group, all_users = TRUE,
     uri <- "https://repo-prod.prod.sagebase.org/repo/v1/form/data/list"
   }
   if (is.null(state_filter)) {
-    state_filter <- c("WAITING_FOR_SUBMISSION", "SUBMITTED_WAITING_FOR_REVIEW",
-                      "ACCEPTED", "REJECTED")
+    if (all_users) { # We cannot get forms that are WAITING_FOR_SUBMISSION as a reviewer
+      state_filter <- c("SUBMITTED_WAITING_FOR_REVIEW", "ACCEPTED", "REJECTED")
+    } else {
+      state_filter <- c("WAITING_FOR_SUBMISSION", "SUBMITTED_WAITING_FOR_REVIEW",
+                        "ACCEPTED", "REJECTED")
+    }
   }
   state_filter_str <- paste(state_filter, collapse = "\",\"")
   query_string <- '{{"filterByState":["{state_filter_str}"],"groupId":"{group}"}}' # nolint

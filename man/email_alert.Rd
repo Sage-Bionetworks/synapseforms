@@ -18,14 +18,14 @@ email_alert(
 \arguments{
 \item{syn}{A Synapse object (see `log_into_synapse`).}
 
-\item{recipients}{A vector of recipients to send an email alert to.}
+\item{recipients}{A vector of recipients (Synapse user IDs) to send
+an email alert to.}
 
 \item{form_group_id}{The form group to check for the form event.}
 
 \item{form_event}{The form event to check for. Possible values are
 "create" or "submit". "create" will consider when the form was added
-to the form group whereas "submit" will consider when the form was submitted.
-Has no effect if time_duration is Inf.}
+to the form group whereas "submit" will consider when the form was submitted.}
 
 \item{time_duration}{The time period (as an integer in seconds or a string
 representation parseable by lubridate::duration) to consider a
@@ -34,10 +34,12 @@ two purposes. First, if there is no file view specified (we are not exporting
 form data to Synapse), this allows us to determine which forms events are recent
 and which are not. Secondly, if there is a file view specified but exporting
 the form data fails for some reason, this prevents the caller from repeatedly
-emailing a user/group past a certain time window (when used with a cron job).}
+emailing a user/group past a certain time window (when used with a cron job).
+Set to Inf to fetch all qualifying events.}
 
 \item{file_view_reference}{Synapse file view to query to check if form has
-already been exported. If the form has already been exported there is no alert.}
+already been exported. If the form has already been exported there is
+no email alert sent out.}
 
 \item{as_reviewer}{Request forms using the /form/data/list/reviewer endpoint.
 If FALSE, request forms using the /form/data/list endpoint. See the Synapse

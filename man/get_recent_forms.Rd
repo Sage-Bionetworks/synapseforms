@@ -20,13 +20,12 @@ get_recent_forms(
 
 \item{time_duration}{The time period (as an integer in seconds or a string
 representation parseable by lubridate::duration) to consider a
-form event "recent".}
+form event "recent". Set to Inf to fetch all qualifying events.}
 
 \item{form_event}{The form event to check for. Possible values are
 "create", "submit", or "review". "create" will consider when the form was added
 to the form group, "submit" will consider when the form was submitted, and
-"review" will consider when the form was reviewed. Has no effect if
-time_duration is Inf.}
+"review" will consider when the form was reviewed.}
 
 \item{as_reviewer}{Request forms using the /form/data/list/reviewer endpoint.
 If False, request forms using the /form/data/list endpoint. See the Synapse
