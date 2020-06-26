@@ -12,7 +12,7 @@ representation parseable by lubridate::duration) to consider a
 form event "recent".}
 
 \item{form_event}{The recent event to check for. Possible values are
-"create" or "submit". "create" will trigger upon a new form being added
+"create", "submit", or "review". "create" will trigger upon a new form being added
 to the form group whereas "submit" will trigger upon an existing form being
 submitted.}
 }

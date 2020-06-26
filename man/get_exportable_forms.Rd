@@ -27,7 +27,7 @@ representation parseable by lubridate::duration) to consider a
 form event "recent". By default it is Inf -- all forms are fetched.}
 
 \item{form_event}{The form event to check for. Possible values are
-"create" or "submit". "create" will consider when the form was added
+"create", "submit", or "review". "create" will consider when the form was added
 to the form group whereas "submit" will consider when the form was submitted.
 Has no effect if time_duration is Inf.}
 

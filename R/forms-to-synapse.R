@@ -55,8 +55,11 @@ get_forms <- function(syn, form_data_id, data_file_handle_id, as_list=FALSE) {
 #' @param recipients A vector of recipients (Synapse user IDs) to send
 #' an email alert to.
 #' @param form_group_id The form group to check for the form event.
+#' @param form_group_name The form group name. Currently (June 2020) the form
+#' group ID is not sufficient information to fetch the form group and get
+#' the group name so we need to manually pass the group name.
 #' @param form_event The form event to check for. Possible values are
-#' "create" or "submit". "create" will consider when the form was added
+#' "create", "submit", or "review". "create" will consider when the form was added
 #' to the form group whereas "submit" will consider when the form was submitted.
 #' @param time_duration The time period (as an integer in seconds or a string
 #' representation parseable by lubridate::duration) to consider a
@@ -73,9 +76,14 @@ get_forms <- function(syn, form_data_id, data_file_handle_id, as_list=FALSE) {
 #' @param as_reviewer Request forms using the /form/data/list/reviewer endpoint.
 #' If FALSE, request forms using the /form/data/list endpoint. See the Synapse
 #' REST docs for additional information.
+#' @param submission_state The submission state of the submissions.
+#' Pass a list of submission states to match on any state in the list.
+#' Submission states are: `WAITING_FOR_SUBMISSION`, `SUBMITTED_WAITING_FOR_REVIEW`,
+#' `ACCEPTED`, `REJECTED`. Set to NULL (default) to ignore submission state.
 #' @export
-email_alert <- function(syn, recipients, form_group_id, form_event = "submit",
-                        time_duration = 60, file_view_reference = NULL,
+email_alert <- function(syn, recipients, form_group_id, form_group_name,
+                        form_event = "submit", time_duration = 60,
+                        file_view_reference = NULL,
                         as_reviewer = TRUE, submission_state = NULL) {
   validate_form_event_params(time_duration = time_duration,
                              form_event = form_event)
@@ -86,7 +94,57 @@ email_alert <- function(syn, recipients, form_group_id, form_event = "submit",
                                            file_view_reference = file_view_reference,
                                            as_reviewer = as_reviewer,
                                            submission_state = submission_state)
-  return(exportable_forms)
+  if (nrow(exportable_forms) > 0) {
+    email_body <- draft_message(
+      exportable_forms = exportable_forms,
+      form_group_name = form_group_name,
+      form_event = form_event)
+    tryCatch({
+      syn$sendMessage(
+        userIds = recipients,
+        messageSubject = glue::glue("New form event on form group {form_group_name}"),
+        messageBody = email_body,
+        contentType = "text/plain")
+    }, error = function(e) {
+      # send notification of failure to the caller
+      this_user <- syn$getUserProfile(syn$username)
+      syn$sendMessage(
+        userIds = list(this_user$ownerId),
+        messageSubject = "Form event notification failure",
+        messageBody = glue::glue(
+          "A form event notification failed to deliver for form group",
+          " {form_group_name} (form group ID: {form_group_id}) after attempting",
+          " to notify Synapse users or groups",
+          " {paste(recipients, collapse=', ')} of a {form_event} event that had occured in",
+          " the prior {lubridate::as.duration(time_duration)}."),
+        contentType = "text/plain")
+    })
+  }
+}
+
+#' Draft the body of an email message notifying of a form event
+#'
+#' @param exportable_forms a dataframe as returned from `get_exportable_forms`.
+#' @param form_group_name The name of the form group where the form event
+#' took place.
+#' @param form_event The form event. Possible values are
+#' "create", "submit", or "review".
+draft_message <- function(exportable_forms, form_group_name, form_event) {
+  number_of_forms <- nrow(exportable_forms)
+  number_of_forms_text <- ifelse(
+    number_of_forms == 1,
+    "A new form has",
+    glue::glue("{number_of_forms} new forms have"))
+  form_event_verb <- dplyr::case_when(
+    form_event == "submit" ~ "submitted to",
+    form_event == "create" ~ "created in",
+    form_event == "review" ~ "reviewed from")
+  email_body <- glue::glue(
+    "Hello, {number_of_forms_text} been {form_event_verb} form group `{form_group_name}`.
+
+    If you have questions about why you are receiving this email, please reach",
+    " out to the current form group or project administrator.")
+  return(email_body)
 }
 
 
@@ -166,7 +224,7 @@ get_recent_forms <- function(syn, form_group_id, time_duration,
 #' representation parseable by lubridate::duration) to consider a
 #' form event "recent". By default it is Inf -- all forms are fetched.
 #' @param form_event The form event to check for. Possible values are
-#' "create" or "submit". "create" will consider when the form was added
+#' "create", "submit", or "review". "create" will consider when the form was added
 #' to the form group whereas "submit" will consider when the form was submitted.
 #' Has no effect if time_duration is Inf.
 #' @param as_reviewer Request forms using the /form/data/list/reviewer endpoint.
@@ -199,7 +257,7 @@ get_exportable_forms <- function(syn, form_group_id, file_view_reference,
 #' representation parseable by lubridate::duration) to consider a
 #' form event "recent".
 #' @param form_event The recent event to check for. Possible values are
-#' "create" or "submit". "create" will trigger upon a new form being added
+#' "create", "submit", or "review". "create" will trigger upon a new form being added
 #' to the form group whereas "submit" will trigger upon an existing form being
 #' submitted.
 validate_form_event_params <- function(time_duration, form_event) {

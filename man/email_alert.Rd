@@ -8,6 +8,7 @@ email_alert(
   syn,
   recipients,
   form_group_id,
+  form_group_name,
   form_event = "submit",
   time_duration = 60,
   file_view_reference = NULL,
@@ -23,8 +24,12 @@ an email alert to.}
 
 \item{form_group_id}{The form group to check for the form event.}
 
+\item{form_group_name}{The form group name. Currently (June 2020) the form
+group ID is not sufficient information to fetch the form group and get
+the group name so we need to manually pass the group name.}
+
 \item{form_event}{The form event to check for. Possible values are
-"create" or "submit". "create" will consider when the form was added
+"create", "submit", or "review". "create" will consider when the form was added
 to the form group whereas "submit" will consider when the form was submitted.}
 
 \item{time_duration}{The time period (as an integer in seconds or a string
