@@ -90,6 +90,7 @@ get_json_as_df <- function(data) {
   # Fix dataframe columns into list columns
   data_df <- data_df %>% dplyr::mutate(
     submissionStatus_submittedOn = .data$submissionStatus$submittedOn,
+    submissionStatus_reviewedOn = .data$submissionStatus$reviewedOn,
     submissionStatus_state = .data$submissionStatus$state,
     submissionStatus = NULL
   )
