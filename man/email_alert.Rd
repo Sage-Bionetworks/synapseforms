@@ -49,6 +49,11 @@ no email alert sent out.}
 \item{as_reviewer}{Request forms using the /form/data/list/reviewer endpoint.
 If FALSE, request forms using the /form/data/list endpoint. See the Synapse
 REST docs for additional information.}
+
+\item{submission_state}{The submission state of the submissions.
+Pass a list of submission states to match on any state in the list.
+Submission states are: `WAITING_FOR_SUBMISSION`, `SUBMITTED_WAITING_FOR_REVIEW`,
+`ACCEPTED`, `REJECTED`. Set to NULL (default) to ignore submission state.}
 }
 \description{
 Email a Synapse user/group in response to a form event

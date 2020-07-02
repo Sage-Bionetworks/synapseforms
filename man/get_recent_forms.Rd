@@ -7,7 +7,7 @@
 get_recent_forms(
   syn,
   form_group_id,
-  time_duration,
+  time_duration = Inf,
   form_event = "create",
   as_reviewer = TRUE,
   submission_state = NULL
@@ -20,7 +20,8 @@ get_recent_forms(
 
 \item{time_duration}{The time period (as an integer in seconds or a string
 representation parseable by lubridate::duration) to consider a
-form event "recent". Set to Inf to fetch all qualifying events.}
+form event "recent". Set to Inf by default, i.e., get all forms, regardless
+of when they were submitted.}
 
 \item{form_event}{The form event to check for. Possible values are
 "create", "submit", or "review". "create" will consider when the form was added

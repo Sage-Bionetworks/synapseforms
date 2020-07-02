@@ -34,13 +34,13 @@ export_forms_to_synapse <- function(syn, form_group_id, output,
     syn_f <- synapseclient$File(temp_f, parent=output)
     syn$store(path = temp_f, parent=file_view_reference)
   })
-  # TODO download all exportable forms, export to Synapse as YAML, and annotate with properties
+  # TODO annotate forms with their top-level fields
   return()
 }
 
 #' Download a form's contents
 get_forms <- function(syn, form_data_id, data_file_handle_id, as_list=FALSE) {
-  fpath <- synapseforms:::get_form_temp(
+  fpath <- get_form_temp(
     syn, file_handle_id = data_file_handle_id, form_data_id = form_data_id)
   if (as_list) {
     forms_as_lists <- purrr::map(fpath, jsonlite::read_json)
@@ -161,7 +161,8 @@ draft_message <- function(exportable_forms, form_group_name, form_event) {
 #' @param form_group_id The form group to check for the form event.
 #' @param time_duration The time period (as an integer in seconds or a string
 #' representation parseable by lubridate::duration) to consider a
-#' form event "recent". Set to Inf to fetch all qualifying events.
+#' form event "recent". Set to Inf by default, i.e., get all forms, regardless
+#' of when they were submitted.
 #' @param form_event The form event to check for. Possible values are
 #' "create", "submit", or "review". "create" will consider when the form was added
 #' to the form group, "submit" will consider when the form was submitted, and
@@ -175,7 +176,7 @@ draft_message <- function(exportable_forms, form_group_name, form_event) {
 #' `ACCEPTED`, `REJECTED`. Set to NULL (default) to ignore submission state.
 #' @return A dataframe where each record is a recent form.
 #' @export
-get_recent_forms <- function(syn, form_group_id, time_duration,
+get_recent_forms <- function(syn, form_group_id, time_duration = Inf,
                              form_event = "create", as_reviewer = TRUE,
                              submission_state = NULL) {
   current_time <- lubridate::now(tzone = "UTC")
