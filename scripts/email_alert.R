@@ -5,25 +5,28 @@ library(synapseforms)
 read_args <- function() {
   option_list <- list(
     make_option("--synapse-username", type = "character",
-                help = "Your Synapse username."),
+                help = "[required] Your Synapse username."),
     make_option("--synapse-password", type = "character",
-                help = "Your Synapse password."),
+                help = "[required] Your Synapse password."),
     make_option("--form-group-id", type = "character",
-                help = "The form group ID."),
+                help = "[required] The form group ID."),
     make_option("--form-group-name", type = "character",
-                help = "The form group name."),
+                help = "[required] The form group name."),
+    make_option("--recipients", type = "character",
+                help = paste("[required] A comma-delimited list of Synapse user IDs",
+                             "in response to a recent form event.")),
     make_option("--form-event", type = "character", default = "submit",
                 help = paste("The form group event to monitor for.",
                              "The possible values are 'create', 'submit',",
                              "and 'review'. The default value is 'submit'.")),
-    make_option("--time-duration", type = "character",
+    make_option("--time-duration", type = "character", default = "Inf",
                 help = paste("The period of time (in seconds or as a string",
                              "parseable by `lubridate::as.duration`) from the",
-                             "present moment to consider an event 'recent' and",
-                             "hence requiring an email alert.")),
-    make_option("--recipients", type = "character",
-                help = paste("A comma-delimited list of Synapse user IDs",
-                             "in response to a recent form event.")),
+                             "present moment to consider a form event 'recent' and",
+                             "hence requiring an email alert. If this flag",
+                             "is not included, any form event satisfying",
+                             "other specified criteria will trigger an alert,",
+                             "regardless of when the form event occurred.")),
     make_option("--file-view-reference", type="character",
                 help= paste("The Synapse ID of a file view with at least a",
                             "`formDataId` column where all forms from this",
@@ -54,6 +57,14 @@ read_args <- function() {
 
 main <- function() {
   args <- read_args()
+  if (any(is.null(args$synapse_username),
+          is.null(args$synapse_password),
+          is.null(args$form_group_id),
+          is.null(args$form_group_name),
+          is.null(args$recipients))) {
+    stop(paste("All required command line arguments must be provided.",
+               "Include the --help flag for more information."))
+  }
   # If time_duration is an integer in seconds, it can only be parsed as an int
   formatted_time_duration <- tryCatch({
     args$time_duration <- as.integer(args$time_duration)
@@ -63,7 +74,9 @@ main <- function() {
     return(args$time_duration)
   })
   recipients <- strsplit(args$recipients, split=",")[[1]]
-  submission_state <- strsplit(args$submission_state, split=",")[[1]]
+  if (!is.null(submission_state)) {
+    submission_state <- strsplit(args$submission_state, split=",")[[1]]
+  }
   syn <- log_into_synapse(
     username=args$synapse_username,
     password=args$synapse_password)
