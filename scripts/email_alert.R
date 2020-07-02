@@ -38,7 +38,10 @@ read_args <- function() {
                 help = paste("Filter results by submission state. Pass a",
                              "comma-delimited list to filter by more than",
                              "one submission state. By default,",
-                             "submission state is not considered.")))
+                             "submission state is not considered.")),
+    make_option("--python-path", type = "character", default=NULL,
+                help = paste("Path to the python installation (for reticulate)",
+                             "If omitted, the system python is used by default.")))
   parser <- OptionParser(
     option_list = option_list,
     description = paste("A command line tool for sending email alerts in",
@@ -81,7 +84,8 @@ main <- function() {
   }
   syn <- log_into_synapse(
     username=args$synapse_username,
-    password=args$synapse_password)
+    password=args$synapse_password,
+    python_path=args$python_path)
   email_alert(
     syn = syn,
     recipients = recipients,
