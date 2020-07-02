@@ -4,18 +4,18 @@ setup({
   FORM_DATA <- c(27776867, 26133145, 26304195)
   form_group_name <- uuid::UUIDgenerate()
   # save syn object and form group to global namespace
-  syn <<- synapseforms::log_into_synapse()
-  form_group <<- synapseforms:::create_new_form_group(syn, form_group_name)
+  syn <<- log_into_synapse()
+  form_group <<- create_new_form_group(syn, form_group_name)
   forms <- purrr::map(FORM_DATA, function(data_file_handle_id) {
-    synapseforms:::add_new_form(
+    add_new_form(
       syn, form_group$groupId, data_file_handle_id, uuid::UUIDgenerate())
   })
   # submit the first two forms
   submitted_forms <- purrr::map(forms[c(1,2)], function(form) {
-    synapseforms::submit_form_for_review(syn, form$formDataId)
+    submit_form_for_review(syn, form$formDataId)
   })
   # review the first form
-  reviewed_forms <- synapseforms::accept_submission(syn, submitted_forms[[1]]$formDataId)
+  reviewed_forms <- accept_submission(syn, submitted_forms[[1]]$formDataId)
 })
 
 teardown({
