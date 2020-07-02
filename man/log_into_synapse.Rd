@@ -4,12 +4,14 @@
 \alias{log_into_synapse}
 \title{Log into Synapse}
 \usage{
-log_into_synapse(username = NULL, password = NULL)
+log_into_synapse(username = NULL, password = NULL, python_path = NULL)
 }
 \arguments{
 \item{username}{Your username}
 
 \item{password}{Your password}
+
+\item{python_path}{Path to python installation. If left blank, uses system python}
 }
 \value{
 Synapse login object from

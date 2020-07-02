@@ -100,6 +100,7 @@ email_alert <- function(syn, recipients, form_group_id, form_group_name,
       form_group_name = form_group_name,
       form_event = form_event)
     tryCatch({
+      recipients <- as.list(recipients)
       syn$sendMessage(
         userIds = recipients,
         messageSubject = glue::glue("New form event on form group {form_group_name}"),
