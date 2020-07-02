@@ -15,9 +15,14 @@ output_submission_csv <- function(data, output_dir) {
 #'
 #' @param username Your username
 #' @param password Your password
+#' @param python_path Path to python installation. If left blank, uses system python
 #' @export
 #' @return Synapse login object from
-log_into_synapse <- function(username = NULL, password = NULL) {
+log_into_synapse <- function(username = NULL, password = NULL,
+                             python_path = NULL) {
+  if (!is.null(python_path)) {
+    reticulate::use_python(python_path)
+  } # else use system install
   synapse <- reticulate::import("synapseclient")
   syn <- synapse$login(username, password)
   return(syn)
