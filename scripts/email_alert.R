@@ -74,8 +74,10 @@ main <- function() {
     return(args$time_duration)
   })
   recipients <- strsplit(args$recipients, split=",")[[1]]
-  if (!is.null(submission_state)) {
+  if (!is.null(args$submission_state)) {
     submission_state <- strsplit(args$submission_state, split=",")[[1]]
+  } else {
+    submission_state <- args$submission_state
   }
   syn <- log_into_synapse(
     username=args$synapse_username,
