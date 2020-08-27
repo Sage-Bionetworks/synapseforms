@@ -31,6 +31,9 @@ read_args <- function() {
                 help= paste("The Synapse ID of a file view with at least a",
                             "`formDataId` column where all forms from this",
                             "form group are tracked.")),
+    make_option("--action-link", type="character",
+                help = paste("A hyperlink to include as part of the email for",
+                             "reviewers to access submitted forms.")),
     make_option("--as-reviewer", action = "store_true", default = T,
                 help = paste("Whether to use the /form/data/list/reviewer",
                              "endpoint. Defaults to TRUE.")),
@@ -94,6 +97,7 @@ main <- function() {
     form_event = args$form_event,
     time_duration = formatted_time_duration,
     file_view_reference = args$file_view_reference,
+    action_link = args$action_link,
     as_reviewer = args$as_reviewer,
     submission_state = submission_state)
 }
