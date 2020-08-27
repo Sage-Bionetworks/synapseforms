@@ -4,7 +4,12 @@
 \alias{draft_message}
 \title{Draft the body of an email message notifying of a form event}
 \usage{
-draft_message(exportable_forms, form_group_name, form_event)
+draft_message(
+  exportable_forms,
+  form_group_name,
+  form_event,
+  action_link = NULL
+)
 }
 \arguments{
 \item{exportable_forms}{a dataframe as returned from `get_exportable_forms`.}
@@ -14,6 +19,9 @@ took place.}
 
 \item{form_event}{The form event. Possible values are
 "create", "submit", or "review".}
+
+\item{action_link}{A hyperlink to include as part of the email for
+reviewers to access submitted forms.}
 }
 \description{
 Draft the body of an email message notifying of a form event

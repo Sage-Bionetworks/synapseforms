@@ -12,6 +12,7 @@ email_alert(
   form_event = "submit",
   time_duration = 60,
   file_view_reference = NULL,
+  action_link = NULL,
   as_reviewer = TRUE,
   submission_state = NULL
 )
@@ -45,6 +46,9 @@ Set to Inf to fetch all qualifying events.}
 \item{file_view_reference}{Synapse file view to query to check if form has
 already been exported. If the form has already been exported there is
 no email alert sent out.}
+
+\item{action_link}{A hyperlink to include as part of the email for
+reviewers to access submitted forms.}
 
 \item{as_reviewer}{Request forms using the /form/data/list/reviewer endpoint.
 If FALSE, request forms using the /form/data/list endpoint. See the Synapse

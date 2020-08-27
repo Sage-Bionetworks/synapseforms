@@ -73,6 +73,8 @@ get_forms <- function(syn, form_data_id, data_file_handle_id, as_list=FALSE) {
 #' @param file_view_reference Synapse file view to query to check if form has
 #' already been exported. If the form has already been exported there is
 #' no email alert sent out.
+#' @param action_link A hyperlink to include as part of the email for
+#' reviewers to access submitted forms.
 #' @param as_reviewer Request forms using the /form/data/list/reviewer endpoint.
 #' If FALSE, request forms using the /form/data/list endpoint. See the Synapse
 #' REST docs for additional information.
@@ -84,7 +86,8 @@ get_forms <- function(syn, form_data_id, data_file_handle_id, as_list=FALSE) {
 email_alert <- function(syn, recipients, form_group_id, form_group_name,
                         form_event = "submit", time_duration = 60,
                         file_view_reference = NULL,
-                        as_reviewer = TRUE, submission_state = NULL) {
+                        action_link = NULL, as_reviewer = TRUE,
+                        submission_state = NULL) {
   validate_form_event_params(time_duration = time_duration,
                              form_event = form_event)
   exportable_forms <- get_exportable_forms(syn = syn,
@@ -98,7 +101,8 @@ email_alert <- function(syn, recipients, form_group_id, form_group_name,
     email_body <- draft_message(
       exportable_forms = exportable_forms,
       form_group_name = form_group_name,
-      form_event = form_event)
+      form_event = form_event,
+      action_link = NULL)
     tryCatch({
       recipients <- as.list(recipients)
       syn$sendMessage(
@@ -130,7 +134,10 @@ email_alert <- function(syn, recipients, form_group_id, form_group_name,
 #' took place.
 #' @param form_event The form event. Possible values are
 #' "create", "submit", or "review".
-draft_message <- function(exportable_forms, form_group_name, form_event) {
+#' @param action_link A hyperlink to include as part of the email for
+#' reviewers to access submitted forms.
+draft_message <- function(exportable_forms, form_group_name, form_event,
+                          action_link = NULL) {
   number_of_forms <- nrow(exportable_forms)
   number_of_forms_text <- ifelse(
     number_of_forms == 1,
@@ -140,11 +147,17 @@ draft_message <- function(exportable_forms, form_group_name, form_event) {
     form_event == "submit" ~ "submitted to",
     form_event == "create" ~ "created in",
     form_event == "review" ~ "reviewed from")
+  questions_text <- paste(
+    "If you have questions about why you are receiving this email,",
+    "please reach out to the current form group or project administrator.")
   email_body <- glue::glue(
-    "Hello, {number_of_forms_text} been {form_event_verb} form group `{form_group_name}`.
-
-    If you have questions about why you are receiving this email, please reach",
-    " out to the current form group or project administrator.")
+    "Hello, {number_of_forms_text} been {form_event_verb} form group `{form_group_name}`.")
+  if (!is.null(action_link)) {
+    email_body <- glue::glue(
+      email_body, "Submitted forms may be accessed here: {action_link}",
+      .sep = " ")
+  }
+  email_body <- glue::glue(email_body, questions_text, .sep="\n\n")
   return(email_body)
 }
 
