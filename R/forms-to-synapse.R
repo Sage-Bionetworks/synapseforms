@@ -38,8 +38,8 @@ export_forms_to_synapse <- function(syn, form_group_id, output,
   return()
 }
 
-#' Download a form's contents
-get_forms <- function(syn, form_data_id, data_file_handle_id, as_list=FALSE) {
+  #' Download a form's contents
+  get_forms <- function(syn, form_data_id, data_file_handle_id, as_list=FALSE) {
   fpath <- get_form_temp(
     syn, file_handle_id = data_file_handle_id, form_data_id = form_data_id)
   if (as_list) {
@@ -102,7 +102,7 @@ email_alert <- function(syn, recipients, form_group_id, form_group_name,
       exportable_forms = exportable_forms,
       form_group_name = form_group_name,
       form_event = form_event,
-      action_link = NULL)
+      action_link = action_link)
     tryCatch({
       recipients <- as.list(recipients)
       syn$sendMessage(
