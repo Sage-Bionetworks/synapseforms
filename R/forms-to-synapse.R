@@ -17,6 +17,9 @@ export_forms_to_synapse <- function(syn, form_group_id, output,
                                            file_view_reference = file_view_reference,
                                            submission_state = submission_state,
                                            ...)
+  if (nrow(exportable_forms) == 0) {
+    return()
+  }
   if (!is.null(form_data_id)) {
     exportable_forms <- exportable_forms %>%
       filter(formDataId %in% form_data_id)
@@ -29,10 +32,12 @@ export_forms_to_synapse <- function(syn, form_group_id, output,
   synapseclient <- reticulate::import("synapseclient") # needed to create File objects
   form_file_handles <- purrr::map2(
     form_contents, exportable_forms$formDataId, function(form, fdi) {
-    temp_f <- tempfile(pattern = glue::glue("form_{fdi}"), fileext = ".yaml")
-    yaml::write_yaml(form, temp_f)
-    syn_f <- synapseclient$File(temp_f, parent=output)
-    syn$store(path = temp_f, parent=file_view_reference)
+    fname <- glue::glue("form_{fdi}.yaml")
+    yaml::write_yaml(form, fname)
+    syn_f <- synapseclient$File(fname, parent=output)
+    syn_f$formDataId <- as.character(fdi)
+    syn$store(syn_f)
+    unlink(fname)
   })
   # TODO annotate forms with their top-level fields
   return()
@@ -259,8 +264,10 @@ get_exportable_forms <- function(syn, form_group_id, file_view_reference,
   if (is.null(file_view_reference)) {
     return(forms)
   }
-  form_file_view <- synTableQuery(
-    paste("SELECT * FROM", file_view_reference))$asDataFrame()
+  form_file_view_q <- syn$tableQuery(
+    paste("SELECT * FROM", file_view_reference))
+  form_file_view <- readr::read_csv(form_file_view_q$filepath) %>%
+    dplyr::mutate(formDataId = as.character(formDataId))
   exportable_forms <- dplyr::anti_join(forms, form_file_view, by = "formDataId")
   return(exportable_forms)
 }
