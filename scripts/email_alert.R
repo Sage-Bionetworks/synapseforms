@@ -4,10 +4,8 @@ library(synapseforms)
 
 read_args <- function() {
   option_list <- list(
-    make_option("--synapse-username", type = "character",
-                help = "[required] Your Synapse username."),
-    make_option("--synapse-password", type = "character",
-                help = "[required] Your Synapse password."),
+    make_option("--synapse-auth-token", type = "character",
+                help = "[required] Your Synapse access token"),
     make_option("--form-group-id", type = "character",
                 help = "[required] The form group ID."),
     make_option("--form-group-name", type = "character",
@@ -63,8 +61,7 @@ read_args <- function() {
 
 main <- function() {
   args <- read_args()
-  if (any(is.null(args$synapse_username),
-          is.null(args$synapse_password),
+  if (any(is.null(args$synapse_auth_token)
           is.null(args$form_group_id),
           is.null(args$form_group_name),
           is.null(args$recipients))) {
@@ -86,9 +83,8 @@ main <- function() {
     submission_state <- args$submission_state
   }
   syn <- log_into_synapse(
-    username=args$synapse_username,
-    password=args$synapse_password,
-    python_path=args$python_path)
+    authToken = args$synapse_auth_token,
+    python_path = args$python_path)
   email_alert(
     syn = syn,
     recipients = recipients,
