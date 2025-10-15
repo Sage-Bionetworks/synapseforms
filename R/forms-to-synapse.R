@@ -19,16 +19,19 @@ export_forms_to_synapse <- function(syn, form_group_id, output,
                                            ...)
   if (nrow(exportable_forms) == 0) {
     return()
+    print("Did not find any exportable forms")
   }
   if (!is.null(form_data_id)) {
     exportable_forms <- exportable_forms %>%
       filter(formDataId %in% form_data_id)
   }
+  print(paste("Found", nrow(exportable_forms), "exportable forms"))
   form_contents <- get_forms(
     syn = syn,
     data_file_handle_id = exportable_forms$dataFileHandleId,
     form_data_id = exportable_forms$formDataId,
     as_list=TRUE)
+  print("Downloaded forms")
   synapseclient <- reticulate::import("synapseclient") # needed to create File objects
   form_file_handles <- purrr::map2(
     form_contents, exportable_forms$formDataId, function(form, fdi) {
@@ -39,6 +42,7 @@ export_forms_to_synapse <- function(syn, form_group_id, output,
     syn$store(syn_f)
     unlink(fname)
   })
+  print("Exported forms")
   # TODO annotate forms with their top-level fields
   return()
 }
@@ -103,6 +107,7 @@ email_alert <- function(syn, recipients, form_group_id, form_group_name,
                                            as_reviewer = as_reviewer,
                                            submission_state = submission_state)
   if (nrow(exportable_forms) > 0) {
+    print(paste("Found", nrow(exportable_forms), "exportable forms"))
     email_body <- draft_message(
       exportable_forms = exportable_forms,
       form_group_name = form_group_name,
@@ -129,6 +134,8 @@ email_alert <- function(syn, recipients, form_group_id, form_group_name,
           " the prior {lubridate::as.duration(time_duration)}."),
         contentType = "text/plain")
     })
+  } else {
+    print("Did not find any exportable forms")
   }
 }
 
