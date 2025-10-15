@@ -61,7 +61,7 @@ read_args <- function() {
 
 main <- function() {
   args <- read_args()
-  if (any(is.null(args$synapse_auth_token)
+  if (any(is.null(args$synapse_auth_token),
           is.null(args$form_group_id),
           is.null(args$form_group_name),
           is.null(args$recipients))) {
