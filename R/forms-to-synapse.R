@@ -266,7 +266,11 @@ get_exportable_forms <- function(syn, form_group_id, file_view_reference,
   }
   form_file_view_q <- syn$tableQuery(
     paste("SELECT * FROM", file_view_reference))
-  form_file_view <- readr::read_csv(form_file_view_q$filepath) %>%
+  form_file_view <- tibble::as_tibble(
+    read.csv(
+      form_file_view_q$filepath
+    )
+  ) %>%
     dplyr::mutate(formDataId = as.character(formDataId))
   exportable_forms <- dplyr::anti_join(forms, form_file_view, by = "formDataId")
   return(exportable_forms)
