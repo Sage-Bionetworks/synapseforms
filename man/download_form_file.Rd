@@ -4,21 +4,16 @@
 \alias{download_form_file}
 \title{Download the submission file}
 \usage{
-download_form_file(ps_url, name, output_dir = NULL)
+download_form_file(ps_url, name, output_dir = ".")
 }
 \arguments{
-\item{ps_url}{The presigned URL for the submission.}
+\item{ps_url}{The presigned URL(s) for the submission.}
 
-\item{name}{The name, with extension, of the submission file.
-If the `output_dir` is not specified, then `name` should be
-full path.}
+\item{name}{The basename of the submission file.}
 
 \item{output_dir}{The directory to download the submission to.
-If `NULL`, will assume full path included in `name`; else will
-prepend `output_dir` to `name`.}
+By default the output directory is the working directory.}
 }
 \description{
-Downloads the submission file locally. Can specify
-the directory to download to, or else the `name` parameter
-will assume the path is included.
+Downloads the submission file locally.
 }

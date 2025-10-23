@@ -19,9 +19,10 @@ get_submissions_metadata(
 \item{all_users}{TRUE to get all submissions in group; FALSE to get
 group submissions from caller only.}
 
-\item{state_filter}{The filter that is desired to gather submissions by.
-Filters are: `WAITING_FOR_SUBMISSION`, `SUBMITTED_WAITING_FOR_REVIEW`,
-`ACCEPTED`, `REJECTED`. Only accepts one filter.}
+\item{state_filter}{The submission state of the submissions.
+Pass a list of submission states to match on any state in the list.
+Submission states are: `WAITING_FOR_SUBMISSION`, `SUBMITTED_WAITING_FOR_REVIEW`,
+`ACCEPTED`, `REJECTED`. Set to NULL (default) to ignore submission state.}
 }
 \value{
 A dataframe of the submission metadata, or NULL if there are
