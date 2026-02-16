@@ -8,11 +8,12 @@ exported forms via a file view to avoid duplicates.
 """
 
 import argparse
+import json
+import os
 import sys
 import tempfile
-import json
-import yaml
 import urllib.request
+import yaml
 from pathlib import Path
 from datetime import datetime, timezone
 from typing import List, Optional, Set
@@ -88,7 +89,53 @@ def parse_args():
         dest="as_reviewer",
         help="Use the /form/data/list endpoint instead of /reviewer endpoint",
     )
+    parser.add_argument(
+        "--serverless",
+        action="store_true",
+        default=False,
+        help=(
+            "This is for use with service catalog scheduled jobs. When enabled, "
+            "extracts the Synapse auth token from the "
+            "SCHEDULED_JOB_SECRETS environment variable. The environment variable "
+            "should contain a JSON object with a 'SYNAPSE_PAT' key."
+        ),
+    )
     return parser.parse_args()
+
+
+def get_auth_token(serverless: bool, cli_auth_token: Optional[str]) -> str:
+    """Determine the appropriate auth token based on serverless flag.
+
+    Args:
+        serverless: Whether to extract token from environment variable
+        cli_auth_token: Auth token provided via CLI argument
+
+    Returns:
+        The auth token to use for Synapse login
+
+    Raises:
+        ValueError: If serverless is True but SCHEDULED_JOB_SECRETS is missing/invalid
+    """
+    if serverless:
+        # Extract token from SCHEDULED_JOB_SECRETS environment variable
+        secrets_json = os.environ.get("SCHEDULED_JOB_SECRETS")
+        if not secrets_json:
+            raise ValueError(
+                "--serverless flag requires SCHEDULED_JOB_SECRETS environment variable to be set"
+            )
+        try:
+            secrets = json.loads(secrets_json)
+            auth_token = secrets.get("SYNAPSE_PAT")
+            if not auth_token:
+                raise ValueError(
+                    "SCHEDULED_JOB_SECRETS does not contain 'SYNAPSE_PAT' key"
+                )
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Failed to parse SCHEDULED_JOB_SECRETS as JSON: {e}")
+    else:
+        auth_token = cli_auth_token
+
+    return auth_token
 
 
 def get_submitted_forms(
@@ -316,9 +363,10 @@ def main():
 
     # Login to Synapse
     print("Logging into Synapse...")
-    if args.synapse_auth_token:
+    auth_token = get_auth_token(args.serverless, args.synapse_auth_token)
+    if auth_token:
         syn = Synapse()
-        syn.login(authToken=args.synapse_auth_token)
+        syn.login(authToken=auth_token)
     else:
         syn = login()
 
