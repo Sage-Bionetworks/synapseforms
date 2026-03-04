@@ -17,11 +17,11 @@ import json
 import os
 import sys
 from datetime import datetime, timedelta, timezone
-from typing import List, Optional, Dict, Any
+from typing import List, Optional
 import pandas as pd
 import synapseclient
 from synapseclient import Synapse
-from synapseclient.models import FormGroup, FormData
+from synapseclient.models import FormGroup
 
 
 def parse_args() -> argparse.Namespace:
@@ -48,8 +48,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--form-group-name",
         type=str,
-        required=True,
-        help="[required] The form group name.",
+        help="[optional] The form group name (for email text / display purposes only). If not provided, will be fetched from Synapse.",
     )
     parser.add_argument(
         "--recipients",
@@ -180,6 +179,30 @@ def log_into_synapse(auth_token: str) -> Synapse:
     """
     syn = synapseclient.login(authToken=auth_token)
     return syn
+
+
+def get_form_group_name(syn: Synapse, form_group_id: str) -> str:
+    """Get form group name from Synapse.
+
+    Args:
+        syn: Synapse client object
+        form_group_id: The form group ID
+
+    Returns:
+        The name of the form group
+
+    Raises:
+        Exception: If form group cannot be retrieved
+    """
+    uri = f"/form/group/{form_group_id}"
+    try:
+        form_group_data = syn.restGET(uri)
+        return form_group_data.get("name", f"Form Group {form_group_id}")
+    except Exception as e:
+        raise Exception(
+            f"Failed to retrieve form group {form_group_id}. "
+            f"Ensure the group exists and you have permission to access it. Error: {e}"
+        )
 
 
 def parse_time_duration(time_duration_str: str) -> Optional[timedelta]:
@@ -434,6 +457,7 @@ def get_exportable_forms(
 def draft_message(
     exportable_forms: pd.DataFrame,
     form_group_name: str,
+    form_group_id: str,
     form_event: str,
     action_link: Optional[str] = None,
 ) -> str:
@@ -442,6 +466,7 @@ def draft_message(
     Args:
         exportable_forms: DataFrame as returned from get_exportable_forms
         form_group_name: Name of the form group where the form event took place
+        form_group_id: ID of the form group where the form event took place
         form_event: The form event ('create', 'submit', or 'review')
         action_link: Hyperlink for reviewers to access submitted forms
 
@@ -469,7 +494,7 @@ def draft_message(
 
     email_body = (
         f"Hello, {number_of_forms_text} been {form_event_verb} "
-        f"form group `{form_group_name}`."
+        f"form group `{form_group_name}` (id: {form_group_id})."
     )
 
     if action_link:
@@ -484,7 +509,7 @@ def email_alert(
     syn: Synapse,
     recipients: List[str],
     form_group_id: str,
-    form_group_name: str,
+    form_group_name: Optional[str] = None,
     form_event: str = "submit",
     time_duration: Optional[timedelta] = None,
     file_view_reference: Optional[str] = None,
@@ -498,7 +523,7 @@ def email_alert(
         syn: Synapse client object
         recipients: List of Synapse user IDs to notify
         form_group_id: The form group ID
-        form_group_name: The form group name
+        form_group_name: The form group name. If not provided, will be fetched from Synapse.
         form_event: Form event to monitor ('create', 'submit', or 'review')
         time_duration: Time period to consider a form event "recent"
         file_view_reference: Synapse file view to check if form already exported
@@ -507,6 +532,10 @@ def email_alert(
         submission_state: List of submission states to filter by
     """
     validate_form_event_params(time_duration, form_event)
+
+    # Get form group name from the form group object if not provided
+    if not form_group_name:
+        form_group_name = get_form_group_name(syn, form_group_id)
 
     exportable_forms = get_exportable_forms(
         syn=syn,
@@ -524,6 +553,7 @@ def email_alert(
         email_body = draft_message(
             exportable_forms=exportable_forms,
             form_group_name=form_group_name,
+            form_group_id=form_group_id,
             form_event=form_event,
             action_link=action_link,
         )
