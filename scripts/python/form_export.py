@@ -43,12 +43,6 @@ def parse_args():
         help="[required] The form group ID",
     )
     parser.add_argument(
-        "--form-group-name",
-        type=str,
-        required=True,
-        help="[required] The form group name",
-    )
-    parser.add_argument(
         "--synapse-parent",
         type=str,
         required=True,
@@ -349,7 +343,6 @@ def main():
     if not all(
         [
             args.form_group_id,
-            args.form_group_name,
             args.synapse_parent,
             args.file_view_reference,
         ]
@@ -392,7 +385,6 @@ def main():
             ]
 
     print(f"Form group ID: {args.form_group_id}")
-    print(f"Form group name: {args.form_group_name}")
     print(f"Submission states: {', '.join(submission_states)}")
     print(f"Export destination: {args.synapse_parent}")
     print(f"File view reference: {args.file_view_reference}")
