@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Export forms as YAML to Synapse as they are submitted to a form group.
+Export forms as JSON to Synapse as they are submitted to a form group.
 
 This script retrieves forms from a Synapse form group based on submission state
-and exports them as YAML files to a specified Synapse folder, tracking already
+and exports them as JSON files to a specified Synapse folder, tracking already
 exported forms via a file view to avoid duplicates.
 """
 
@@ -13,9 +13,7 @@ import os
 import sys
 import tempfile
 import urllib.request
-import yaml
 from pathlib import Path
-from datetime import datetime, timezone
 from typing import List, Optional, Set
 
 from synapseclient import Synapse, login, File
@@ -97,7 +95,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def get_auth_token(serverless: bool, cli_auth_token: Optional[str]) -> str:
+def get_auth_token(serverless: bool, cli_auth_token: Optional[str]) -> Optional[str]:
     """Determine the appropriate auth token based on serverless flag.
 
     Args:
@@ -125,7 +123,9 @@ def get_auth_token(serverless: bool, cli_auth_token: Optional[str]) -> str:
                     "SCHEDULED_JOB_SECRETS does not contain 'SYNAPSE_PAT' key"
                 )
         except json.JSONDecodeError as e:
-            raise ValueError(f"Failed to parse SCHEDULED_JOB_SECRETS as JSON: {e}")
+            raise ValueError(
+                f"Failed to parse SCHEDULED_JOB_SECRETS as JSON: {e}"
+            ) from e
     else:
         auth_token = cli_auth_token
 
@@ -278,7 +278,7 @@ def download_form_content(syn: Synapse, form: FormData) -> dict:
         urllib.request.urlretrieve(presigned_url, tmp_path)
 
         # Read the JSON content
-        with open(tmp_path, "r") as f:
+        with open(tmp_path, "r", encoding="utf-8") as f:
             form_content = json.load(f)
 
         return form_content
@@ -307,19 +307,19 @@ def export_forms_to_synapse(
         # Download form content
         form_content = download_form_content(syn, form)
 
-        # Write to temporary YAML file
-        yaml_filename = f"form_{form.form_data_id}.yaml"
+        # Write to temporary JSON file
+        json_filename = f"form_{form.form_data_id}.json"
         with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".yaml", delete=False, prefix=f"form_{form.form_data_id}_"
+            mode="w", suffix=".json", delete=False, prefix=f"form_{form.form_data_id}_"
         ) as tmp:
-            yaml.dump(form_content, tmp, default_flow_style=False, allow_unicode=True)
+            json.dump(form_content, tmp, indent=2)
             tmp_path = tmp.name
 
         try:
             # Create Synapse File object
             syn_file = File(
                 path=tmp_path,
-                name=yaml_filename,
+                name=json_filename,
                 parent=synapse_parent,
             )
 
@@ -328,7 +328,7 @@ def export_forms_to_synapse(
 
             # Store to Synapse
             syn.store(syn_file)
-            print(f"  ✓ Exported form {form.form_data_id} as {yaml_filename}")
+            print(f"  ✓ Exported form {form.form_data_id} as {json_filename}")
 
         finally:
             # Clean up temp file
