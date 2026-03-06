@@ -17,3 +17,7 @@ to learn how to log in through the client.
 
 The package can be installed with
 `remotes::install_github("Sage-Bionetworks/synapseforms")`.
+
+## Python Scripts
+
+In addition to the R package, this repository includes Python scripts for working with Synapse forms. These scripts are designed to run in a Docker container based on the Synapse Python client. See [the Python README](./scripts/python/README.md).
